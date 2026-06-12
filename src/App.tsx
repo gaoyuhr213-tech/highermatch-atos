@@ -38,7 +38,7 @@ export const useApp = () => {
     authenticated: state.authenticated,
     role: state.role,
     setAuthenticated: (v: boolean) => {
-      if (v) dispatch({ type: 'LOGIN_SUCCESS', payload: { role: 'b' as Role, tenantId: 'demo', enterpriseName: '蓉才通演示', certSerial: 'SCCA-DEMO-001', certLevel: 'EV', scopedToken: 'demo-token' } });
+      if (v) dispatch({ type: 'LOGIN_SUCCESS', payload: { role: 'employer' as Role, tenantId: 'demo', enterpriseName: '蓉才通演示', certSerial: 'SCCA-DEMO-001', certLevel: 'EV', scopedToken: 'demo-token' } });
       else dispatch({ type: 'LOGOUT' });
     },
     setRole: (r: Role) => dispatch({ type: 'SET_ROLE', payload: r }),
