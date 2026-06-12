@@ -1,14 +1,12 @@
 /**
  * HigherMatch ATOS — MSW Initialization
  * 
- * 条件启动：仅在开发环境且VITE_ENABLE_MSW=true时激活。
- * 生产环境此模块不会被打包（tree-shaking）。
+ * 在所有环境启动MSW mock server。
+ * 当前阶段无真实后端，MSW作为唯一数据源。
+ * 后续接入真实API后，可改回仅开发环境启动。
  */
 
 export async function initMocks(): Promise<void> {
-  if (import.meta.env.PROD) return;
-  if (import.meta.env.VITE_ENABLE_MSW !== 'true') return;
-
   const { worker } = await import('./browser');
   
   await worker.start({

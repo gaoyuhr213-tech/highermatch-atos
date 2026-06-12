@@ -657,12 +657,12 @@ const extendedHandlers = [
   // Graph（知识图谱）
   http.get(`${API_BASE}/graph/nodes`, async () => {
     await delay(200);
-    return HttpResponse.json({ success: true, data: graphNodes });
+    return HttpResponse.json({ success: true, data: { items: graphNodes, total: graphNodes.length, page: 1, pageSize: 100, hasMore: false } });
   }),
 
   http.get(`${API_BASE}/graph/edges`, async () => {
     await delay(200);
-    return HttpResponse.json({ success: true, data: graphEdges });
+    return HttpResponse.json({ success: true, data: { items: graphEdges, total: graphEdges.length, page: 1, pageSize: 100, hasMore: false } });
   }),
 
   // Sourcing（AI寻访）
@@ -677,6 +677,18 @@ const extendedHandlers = [
   http.post(`${API_BASE}/sourcing/contact/:id`, async () => {
     await delay(200);
     return HttpResponse.json({ success: true, data: { contacted: true, contactedAt: now() } });
+  }),
+
+  http.post(`${API_BASE}/sourcing/contact/batch`, async ({ request }) => {
+    await delay(300);
+    const body = await request.json() as { ids: string[] };
+    return HttpResponse.json({ success: true, data: { contacted: body.ids?.length || 0 } });
+  }),
+
+  http.post(`${API_BASE}/sourcing/strategy`, async ({ request }) => {
+    await delay(500);
+    const body = await request.json() as { query: string };
+    return HttpResponse.json({ success: true, data: { summary: `基于"${body.query}"生成寻访策略：\n1. 目标画像：${body.query}相关领域3-8年经验，985/211优先\n2. 渠道策略：LinkedIn(40%) + 脉脉(30%) + GitHub(20%) + 内推(10%)\n3. 触达话术：个性化InMail模板已生成\n4. 预计产出：7-12位高匹配候选人`, channels: ['LinkedIn', '脉脉', 'GitHub', '内推'], estimatedCandidates: 10 } });
   }),
 
   // Interview Sessions（AI面试会话）
@@ -720,12 +732,12 @@ const extendedHandlers = [
   // Succession Planning（继任规划）
   http.get(`${API_BASE}/succession/plan`, async () => {
     await delay(200);
-    return HttpResponse.json({ success: true, data: successionPlan });
+    return HttpResponse.json({ success: true, data: { items: successionPlan, total: successionPlan.length, page: 1, pageSize: 50, hasMore: false } });
   }),
 
   http.get(`${API_BASE}/succession/slots`, async () => {
     await delay(200);
-    return HttpResponse.json({ success: true, data: successionSlots });
+    return HttpResponse.json({ success: true, data: { items: successionSlots, total: successionSlots.length, page: 1, pageSize: 50, hasMore: false } });
   }),
 
   // Talent Commons（人才共享大厅）
@@ -761,7 +773,7 @@ const extendedHandlers = [
   // Decision Lineage（决策血统追溯）
   http.get(`${API_BASE}/decisions/lineage/:id`, async () => {
     await delay(300);
-    return HttpResponse.json({ success: true, data: decisionLineage });
+    return HttpResponse.json({ success: true, data: { items: decisionLineage, total: decisionLineage.length, page: 1, pageSize: 50, hasMore: false } });
   }),
 
   // Org Health Metrics（组织健康指标）
@@ -773,7 +785,7 @@ const extendedHandlers = [
   // SSE Events（实时事件流）
   http.get(`${API_BASE}/events/stream`, async () => {
     await delay(100);
-    return HttpResponse.json({ success: true, data: sseEvents });
+    return HttpResponse.json({ success: true, data: { items: sseEvents, total: sseEvents.length, page: 1, pageSize: 50, hasMore: false } });
   }),
 ];
 

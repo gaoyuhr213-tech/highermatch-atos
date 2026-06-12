@@ -4,11 +4,9 @@ import './index.css';
 import App from './App.tsx';
 
 async function bootstrap() {
-  // 开发环境启动MSW（生产环境tree-shake掉）
-  if (import.meta.env.DEV) {
-    const { initMocks } = await import('./mocks');
-    await initMocks();
-  }
+  // 启动MSW mock server（当前无真实后端，所有环境均需要）
+  const { initMocks } = await import('./mocks');
+  await initMocks();
 
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
