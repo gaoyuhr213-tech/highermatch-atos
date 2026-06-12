@@ -1,0 +1,97 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useReducer, lazy, Suspense } from 'react';
+import { AppContext, appReducer, initialState, useAppContext } from './store';
+import type { Role } from './store';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { LoadingView } from './components/StateViews';
+import DashboardLayout from './layouts/DashboardLayout';
+
+// ─── 路由级 Code Split（React.lazy） ─────────────────────
+const UShieldLogin = lazy(() => import('./pages/UShieldLogin'));
+const CommandCenter = lazy(() => import('./pages/b/CommandCenter'));
+const Pipeline = lazy(() => import('./pages/b/Pipeline'));
+const Graph = lazy(() => import('./pages/b/Graph'));
+const Sourcing = lazy(() => import('./pages/b/Sourcing'));
+const Interview = lazy(() => import('./pages/b/Interview'));
+const JobQA = lazy(() => import('./pages/b/JobQA'));
+const Community = lazy(() => import('./pages/b/Community'));
+const EfficiencyDashboard = lazy(() => import('./pages/b/EfficiencyDashboard'));
+const AuditLog = lazy(() => import('./pages/b/AuditLog'));
+const Coach = lazy(() => import('./pages/c/Coach'));
+const DecisionHub = lazy(() => import('./pages/c/DecisionHub'));
+const Apply = lazy(() => import('./pages/c/Apply'));
+const Endorsement = lazy(() => import('./pages/c/Endorsement'));
+const Reviews = lazy(() => import('./pages/expert/Reviews'));
+const Rewards = lazy(() => import('./pages/expert/Rewards'));
+const Succession = lazy(() => import('./pages/soe/Succession'));
+const Commons = lazy(() => import('./pages/soe/Commons'));
+const DecisionLineage = lazy(() => import('./pages/DecisionLineage'));
+
+// ─── 兼容旧API（供子组件过渡期使用） ────────────────────
+export type { Role } from './store';
+export { AppContext } from './store';
+export const useApp = () => {
+  const { state, dispatch } = useAppContext();
+  return {
+    authenticated: state.authenticated,
+    role: state.role,
+    setAuthenticated: (v: boolean) => {
+      if (!v) dispatch({ type: 'LOGOUT' });
+    },
+    setRole: (r: Role) => dispatch({ type: 'SET_ROLE', payload: r }),
+    showLineage: state.showLineage,
+    setShowLineage: (v: boolean) => {
+      if (v) dispatch({ type: 'OPEN_LINEAGE', payload: '' });
+      else dispatch({ type: 'CLOSE_LINEAGE' });
+    },
+  };
+};
+
+export default function App() {
+  const [state, dispatch] = useReducer(appReducer, initialState);
+
+  return (
+    <ErrorBoundary>
+      <AppContext.Provider value={{ state, dispatch }}>
+        <BrowserRouter>
+          <Suspense fallback={<LoadingView text="正在加载页面..." />}>
+            {!state.authenticated ? (
+              <UShieldLogin />
+            ) : (
+              <DashboardLayout>
+                <Routes>
+                  {/* B端 */}
+                  <Route path="/b/command" element={<CommandCenter />} />
+                  <Route path="/b/pipeline" element={<Pipeline />} />
+                  <Route path="/b/graph" element={<Graph />} />
+                  <Route path="/b/sourcing" element={<Sourcing />} />
+                  <Route path="/b/interview" element={<Interview />} />
+                  <Route path="/b/job-qa" element={<JobQA />} />
+                  <Route path="/b/community" element={<Community />} />
+                  <Route path="/b/efficiency" element={<EfficiencyDashboard />} />
+                  <Route path="/b/audit" element={<AuditLog />} />
+                  {/* C端 */}
+                  <Route path="/c/coach" element={<Coach />} />
+                  <Route path="/c/apply" element={<Apply />} />
+                  <Route path="/c/endorsement" element={<Endorsement />} />
+                  <Route path="/c/decision-hub" element={<DecisionHub />} />
+                  {/* 专家端 */}
+                  <Route path="/expert/reviews" element={<Reviews />} />
+                  <Route path="/expert/rewards" element={<Rewards />} />
+                  {/* 国企端 */}
+                  <Route path="/soe/succession" element={<Succession />} />
+                  <Route path="/soe/commons" element={<Commons />} />
+                  {/* 默认重定向 */}
+                  <Route path="*" element={<Navigate to="/b/command" replace />} />
+                </Routes>
+                {state.showLineage && (
+                  <DecisionLineage onClose={() => dispatch({ type: 'CLOSE_LINEAGE' })} />
+                )}
+              </DashboardLayout>
+            )}
+          </Suspense>
+        </BrowserRouter>
+      </AppContext.Provider>
+    </ErrorBoundary>
+  );
+}
