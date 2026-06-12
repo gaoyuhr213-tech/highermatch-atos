@@ -1,5 +1,5 @@
-import { talentCommons } from '../../data/mock-data';
-import { Users, Building2, ArrowLeftRight, Shield, X, Key, Clock, FileText, CheckCircle2, AlertTriangle, Lock, Unlock } from 'lucide-react';
+import { useTalentCommons } from '../../lib/api/hooks';
+import { Users, Building2, ArrowLeftRight, Shield, X, Key, Clock, FileText, CheckCircle2, AlertTriangle, Lock, Unlock, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 type AuthStep = 'select' | 'scope' | 'sign' | 'complete';
@@ -22,6 +22,7 @@ const availableScopes = [
 ];
 
 export default function Commons() {
+  const { data: commonsData, isLoading, error } = useTalentCommons();
   const [authModal, setAuthModal] = useState<ScopedTokenConfig | null>(null);
   const [authStep, setAuthStep] = useState<AuthStep>('select');
   const [selectedScopes, setSelectedScopes] = useState<string[]>([]);
@@ -30,6 +31,11 @@ export default function Commons() {
   const [signing, setSigning] = useState(false);
   const [completedTokens, setCompletedTokens] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState('all');
+
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载人才共享数据...</span></div>;
+  if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
+
+  const talentCommons = commonsData?.items || [];
 
   const handleStartAuth = (talent: typeof talentCommons[0]) => {
     setAuthModal({ talentId: talent.id, talentName: talent.name, scopes: [], duration: '30', purpose: '' });
@@ -73,7 +79,7 @@ export default function Commons() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="stat-card"><p className="text-xs text-slate-500">共享池人才</p><p className="text-2xl font-bold text-slate-900">{talentCommons.length}</p></div>
-        <div className="stat-card"><p className="text-xs text-slate-500">CA认证率</p><p className="text-2xl font-bold text-trust-600">{Math.round(talentCommons.filter(t => t.caVerified).length / talentCommons.length * 100)}%</p></div>
+        <div className="stat-card"><p className="text-xs text-slate-500">CA认证率</p><p className="text-2xl font-bold text-trust-600">{talentCommons.length > 0 ? Math.round(talentCommons.filter(t => t.caVerified).length / talentCommons.length * 100) : 0}%</p></div>
         <div className="stat-card"><p className="text-xs text-slate-500">活跃借调</p><p className="text-2xl font-bold text-primary-600">3</p></div>
         <div className="stat-card"><p className="text-xs text-slate-500">本月新增</p><p className="text-2xl font-bold text-emerald-600">+2</p></div>
       </div>

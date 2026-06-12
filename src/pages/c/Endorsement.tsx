@@ -1,6 +1,7 @@
-import { endorsementCards } from '../../data/mock-data';
-import { Shield, Share2, QrCode, ExternalLink, X, CheckCircle2, Clock, Send, FileCheck } from 'lucide-react';
+import { useEndorsementCards, useVerifyEndorsement } from '../../lib/api/hooks';
+import { Shield, Share2, QrCode, ExternalLink, X, CheckCircle2, Clock, Send, FileCheck, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import type { EndorsementCard } from '../../lib/api/types';
 
 const statusMap: Record<string, { label: string; cls: string; icon: typeof Clock }> = {
   generated: { label: '已生成', cls: 'badge-blue', icon: Clock },
@@ -13,15 +14,26 @@ const statusMap: Record<string, { label: string; cls: string; icon: typeof Clock
 const statusFlow = ['generated', 'signed', 'shared', 'verified', 'converted'];
 
 export default function Endorsement() {
-  const [cards, setCards] = useState(endorsementCards.map(c => ({ ...c })));
+  const { data: endorsementData, isLoading, error } = useEndorsementCards();
+  const verifyMutation = useVerifyEndorsement();
+  const [localCards, setLocalCards] = useState<EndorsementCard[] | null>(null);
   const [showQR, setShowQR] = useState<string | null>(null);
   const [showVerify, setShowVerify] = useState<string | null>(null);
 
+  // Use local state for optimistic updates, fallback to server data
+  const serverCards = endorsementData?.items || [];
+  const cards = localCards || serverCards;
+
+  // Sync server data to local when it arrives and local is not yet set
+  if (!localCards && serverCards.length > 0) {
+    setLocalCards(serverCards.map(c => ({ ...c })));
+  }
+
   const advanceStatus = (id: string) => {
-    setCards(prev => prev.map(c => {
+    setLocalCards(prev => (prev || []).map(c => {
       if (c.id !== id) return c;
       const currentIdx = statusFlow.indexOf(c.status);
-      if (currentIdx < statusFlow.length - 1) return { ...c, status: statusFlow[currentIdx + 1] };
+      if (currentIdx < statusFlow.length - 1) return { ...c, status: statusFlow[currentIdx + 1] as EndorsementCard['status'] };
       return c;
     }));
   };
@@ -33,12 +45,16 @@ export default function Endorsement() {
 
   const handleVerify = (id: string) => {
     setShowVerify(id);
+    verifyMutation.mutate(id);
     const card = cards.find(c => c.id === id);
     if (card && (card.status === 'shared' || card.status === 'verified')) {
-      setCards(prev => prev.map(c => c.id === id ? { ...c, verifiedCount: c.verifiedCount + 1 } : c));
+      setLocalCards(prev => (prev || []).map(c => c.id === id ? { ...c, verifiedCount: c.verifiedCount + 1 } : c));
       if (card.status === 'shared') advanceStatus(id);
     }
   };
+
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载背书卡片...</span></div>;
+  if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
 
   return (
     <div className="p-8 max-w-[1200px] mx-auto">

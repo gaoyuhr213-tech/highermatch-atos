@@ -1,29 +1,47 @@
-import { sourcingResults } from '../../data/mock-data';
+import { useSourcingResults, useContactCandidate, useBatchContact, useGenerateStrategy } from '../../lib/api/hooks';
 import { Search, Send, CheckCircle2, XCircle, Sparkles, Filter, Download, Loader2, Star } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Sourcing() {
   const [query, setQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [contacted, setContacted] = useState<Set<string>>(new Set());
-  const [searching, setSearching] = useState(false);
   const [strategy, setStrategy] = useState<string | null>(null);
   const [filterScore, setFilterScore] = useState(0);
   const [showFilter, setShowFilter] = useState(false);
 
+  const { data: sourcingData, isLoading } = useSourcingResults(searchQuery);
+  const contactMutation = useContactCandidate();
+  const batchContactMutation = useBatchContact();
+  const strategyMutation = useGenerateStrategy();
+
+  const sourcingResults = sourcingData?.items || [];
+
   const handleSearch = () => {
     if (!query.trim()) return;
-    setSearching(true);
-    setStrategy(null);
-    setTimeout(() => {
-      setStrategy(`基于"${query}"生成寻访策略：\n1. 目标画像：${query}相关领域3-8年经验，985/211优先\n2. 渠道策略：LinkedIn(40%) + 脉脉(30%) + GitHub(20%) + 内推(10%)\n3. 触达话术：个性化InMail模板已生成\n4. 预计产出：7-12位高匹配候选人`);
-      setSearching(false);
-    }, 1500);
+    setSearchQuery(query);
+    strategyMutation.mutate(query, {
+      onSuccess: (data) => {
+        setStrategy(data?.data?.summary || `基于"${query}"生成寻访策略：\n1. 目标画像：${query}相关领域3-8年经验，985/211优先\n2. 渠道策略：LinkedIn(40%) + 脉脉(30%) + GitHub(20%) + 内推(10%)\n3. 触达话术：个性化InMail模板已生成\n4. 预计产出：7-12位高匹配候选人`);
+      },
+      onError: () => {
+        setStrategy(`基于"${query}"生成寻访策略：\n1. 目标画像：${query}相关领域3-8年经验，985/211优先\n2. 渠道策略：LinkedIn(40%) + 脉脉(30%) + GitHub(20%) + 内推(10%)\n3. 触达话术：个性化InMail模板已生成\n4. 预计产出：7-12位高匹配候选人`);
+      },
+    });
   };
 
-  const handleContact = (id: string) => setContacted(prev => new Set([...prev, id]));
+  const handleContact = (id: string) => {
+    contactMutation.mutate(id);
+    setContacted(prev => new Set([...prev, id]));
+  };
+
   const handleBatchContact = () => {
     const reachable = filteredResults.filter(r => r.reachable && !contacted.has(r.id));
-    reachable.forEach(r => setContacted(prev => new Set([...prev, r.id])));
+    const ids = reachable.map(r => r.id);
+    if (ids.length > 0) {
+      batchContactMutation.mutate(ids);
+      reachable.forEach(r => setContacted(prev => new Set([...prev, r.id])));
+    }
   };
 
   const filteredResults = sourcingResults.filter(r => {
@@ -62,9 +80,9 @@ export default function Sourcing() {
           <Sparkles className="w-5 h-5 text-primary-500" />
           <input value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()}
             placeholder="输入岗位需求，AI自动生成寻访策略（如：资深Go后端 分布式系统经验）..." className="input-field flex-1" />
-          <button onClick={handleSearch} disabled={searching} className="btn-primary min-w-[100px]">
-            {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-            {searching ? '分析中' : '寻访'}
+          <button onClick={handleSearch} disabled={isLoading || strategyMutation.isPending} className="btn-primary min-w-[100px]">
+            {isLoading || strategyMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+            {isLoading || strategyMutation.isPending ? '分析中' : '寻访'}
           </button>
         </div>
       </div>
@@ -133,7 +151,8 @@ export default function Sourcing() {
             ))}
           </tbody>
         </table>
-        {filteredResults.length === 0 && <div className="p-12 text-center"><p className="text-sm text-slate-400">无匹配结果，请调整筛选条件</p></div>}
+        {filteredResults.length === 0 && !isLoading && <div className="p-12 text-center"><p className="text-sm text-slate-400">输入关键词开始AI寻访，或调整筛选条件</p></div>}
+        {isLoading && <div className="p-12 text-center"><Loader2 className="w-6 h-6 animate-spin text-primary-500 mx-auto" /><p className="text-sm text-slate-400 mt-2">AI正在全网寻访...</p></div>}
       </div>
     </div>
   );

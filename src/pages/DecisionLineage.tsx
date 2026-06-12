@@ -1,10 +1,11 @@
-import { decisionLineage } from '../data/mock-data';
-import { X, Shield, Bot, FileText, GitBranch, CheckCircle2, AlertTriangle, Hash, Copy, Download, ExternalLink, Lock, Cpu, Code2, ChevronDown, ChevronRight } from 'lucide-react';
+import { useDecisionLineage } from '../lib/api/hooks';
+import { X, Shield, Bot, FileText, GitBranch, CheckCircle2, AlertTriangle, Hash, Copy, Download, ExternalLink, Lock, Cpu, Code2, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
 import { useState, useCallback } from 'react';
 
-interface Props { onClose: () => void; }
+interface Props { onClose: () => void; decisionId?: string; }
 
-export default function DecisionLineage({ onClose }: Props) {
+export default function DecisionLineage({ onClose, decisionId = 'default' }: Props) {
+  const { data: lineageData, isLoading, error } = useDecisionLineage(decisionId);
   const [expandedStep, setExpandedStep] = useState<number>(0);
   const [verifying, setVerifying] = useState(false);
   const [verified, setVerified] = useState(false);
@@ -22,6 +23,26 @@ export default function DecisionLineage({ onClose }: Props) {
     setCopiedHash(id);
     setTimeout(() => setCopiedHash(null), 2000);
   }, []);
+
+  if (isLoading) return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
+      <div className="bg-white rounded-2xl p-8 flex items-center gap-3" onClick={e => e.stopPropagation()}>
+        <Loader2 className="w-6 h-6 animate-spin text-primary-500" />
+        <span className="text-slate-600">加载决策血统数据...</span>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
+      <div className="bg-white rounded-2xl p-8 text-center" onClick={e => e.stopPropagation()}>
+        <p className="text-red-500">加载失败：{(error as Error).message}</p>
+        <button onClick={onClose} className="mt-4 btn-secondary">关闭</button>
+      </div>
+    </div>
+  );
+
+  const decisionLineage = lineageData?.items || [];
 
   const handleExportPdf = () => {
     setExportingPdf(true);
@@ -64,7 +85,7 @@ export default function DecisionLineage({ onClose }: Props) {
           </div>
         </div>
 
-        {/* Summary Bar - Enhanced */}
+        {/* Summary Bar */}
         <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-primary-50/30 border-b border-slate-100">
           <div className="grid grid-cols-7 gap-4">
             <div><p className="text-[10px] text-slate-400 uppercase tracking-wider">候选人</p><p className="text-sm font-semibold text-slate-800">张明远</p></div>
@@ -82,7 +103,7 @@ export default function DecisionLineage({ onClose }: Props) {
           </div>
         </div>
 
-        {/* Timeline - Enhanced */}
+        {/* Timeline */}
         <div className="flex-1 overflow-y-auto p-6">
           <div className="relative">
             <div className="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-primary-200 via-slate-200 to-trust-200" />
@@ -125,7 +146,7 @@ export default function DecisionLineage({ onClose }: Props) {
                         <div className="mt-4 pt-4 border-t border-slate-100 space-y-4">
                           <p className="text-sm text-slate-700 leading-relaxed">{step.action}</p>
 
-                          {/* Evidence Links - Enhanced with confidence bars */}
+                          {/* Evidence Links */}
                           <div>
                             <p className="text-xs font-semibold text-slate-600 mb-2 flex items-center gap-2">
                               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />正面证据链 ({step.evidenceLinks.length})
@@ -154,7 +175,7 @@ export default function DecisionLineage({ onClose }: Props) {
                             </div>
                           </div>
 
-                          {/* Counter Evidence - Enhanced */}
+                          {/* Counter Evidence */}
                           {hasCounter && (
                             <div className="p-3 bg-amber-50 rounded-xl border border-amber-100">
                               <p className="text-xs font-semibold text-amber-700 mb-2 flex items-center gap-2">
@@ -243,7 +264,7 @@ export default function DecisionLineage({ onClose }: Props) {
           </div>
         </div>
 
-        {/* Footer - Enhanced */}
+        {/* Footer */}
         <div className="p-4 border-t border-slate-100 bg-gradient-to-r from-slate-50 to-trust-50/30 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">

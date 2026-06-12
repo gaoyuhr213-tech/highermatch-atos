@@ -1,16 +1,21 @@
-import { successionPlan } from '../../data/mock-data';
-import { Users, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, TrendingUp, Clock, Shield, Play, RotateCcw, Download, Zap } from 'lucide-react';
+import { useSuccessionPlans } from '../../lib/api/hooks';
+import { Users, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, TrendingUp, Clock, Shield, Play, RotateCcw, Download, Zap, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Succession() {
+  const { data: plansData, isLoading, error } = useSuccessionPlans();
   const [expandedPos, setExpandedPos] = useState<string | null>(null);
   const [simulating, setSimulating] = useState(false);
   const [simResults, setSimResults] = useState<Record<string, { newReadiness: number; months: number; actions: string[] }> | null>(null);
   const [whatIfMode, setWhatIfMode] = useState(false);
   const [whatIfAdjustments, setWhatIfAdjustments] = useState<Record<string, number>>({});
 
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载继任计划...</span></div>;
+  if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
+
+  const successionPlan = plansData?.items || [];
   const totalRisk = successionPlan.filter(p => p.riskLevel === 'high').length;
-  const avgReadiness = Math.round(successionPlan.reduce((acc, p) => acc + p.successors.reduce((a, s) => a + s.readiness, 0) / p.successors.length, 0) / successionPlan.length);
+  const avgReadiness = successionPlan.length > 0 ? Math.round(successionPlan.reduce((acc, p) => acc + p.successors.reduce((a, s) => a + s.readiness, 0) / p.successors.length, 0) / successionPlan.length) : 0;
 
   const handleSimulate = () => {
     setSimulating(true);

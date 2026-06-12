@@ -4,6 +4,8 @@ import { AppContext, appReducer, initialState, useAppContext } from './store';
 import type { Role } from './store';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { LoadingView } from './components/StateViews';
+import { QueryProvider } from './lib/api/provider';
+import { AuthProvider } from './lib/auth';
 import DashboardLayout from './layouts/DashboardLayout';
 
 // ─── 路由级 Code Split（React.lazy） ─────────────────────
@@ -52,46 +54,50 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <AppContext.Provider value={{ state, dispatch }}>
-        <BrowserRouter>
-          <Suspense fallback={<LoadingView text="正在加载页面..." />}>
-            {!state.authenticated ? (
-              <UShieldLogin />
-            ) : (
-              <DashboardLayout>
-                <Routes>
-                  {/* B端 */}
-                  <Route path="/b/command" element={<CommandCenter />} />
-                  <Route path="/b/pipeline" element={<Pipeline />} />
-                  <Route path="/b/graph" element={<Graph />} />
-                  <Route path="/b/sourcing" element={<Sourcing />} />
-                  <Route path="/b/interview" element={<Interview />} />
-                  <Route path="/b/job-qa" element={<JobQA />} />
-                  <Route path="/b/community" element={<Community />} />
-                  <Route path="/b/efficiency" element={<EfficiencyDashboard />} />
-                  <Route path="/b/audit" element={<AuditLog />} />
-                  {/* C端 */}
-                  <Route path="/c/coach" element={<Coach />} />
-                  <Route path="/c/apply" element={<Apply />} />
-                  <Route path="/c/endorsement" element={<Endorsement />} />
-                  <Route path="/c/decision-hub" element={<DecisionHub />} />
-                  {/* 专家端 */}
-                  <Route path="/expert/reviews" element={<Reviews />} />
-                  <Route path="/expert/rewards" element={<Rewards />} />
-                  {/* 国企端 */}
-                  <Route path="/soe/succession" element={<Succession />} />
-                  <Route path="/soe/commons" element={<Commons />} />
-                  {/* 默认重定向 */}
-                  <Route path="*" element={<Navigate to="/b/command" replace />} />
-                </Routes>
-                {state.showLineage && (
-                  <DecisionLineage onClose={() => dispatch({ type: 'CLOSE_LINEAGE' })} />
+      <QueryProvider>
+        <AuthProvider>
+          <AppContext.Provider value={{ state, dispatch }}>
+            <BrowserRouter>
+              <Suspense fallback={<LoadingView text="正在加载页面..." />}>
+                {!state.authenticated ? (
+                  <UShieldLogin />
+                ) : (
+                  <DashboardLayout>
+                    <Routes>
+                      {/* B端 */}
+                      <Route path="/b/command" element={<CommandCenter />} />
+                      <Route path="/b/pipeline" element={<Pipeline />} />
+                      <Route path="/b/graph" element={<Graph />} />
+                      <Route path="/b/sourcing" element={<Sourcing />} />
+                      <Route path="/b/interview" element={<Interview />} />
+                      <Route path="/b/job-qa" element={<JobQA />} />
+                      <Route path="/b/community" element={<Community />} />
+                      <Route path="/b/efficiency" element={<EfficiencyDashboard />} />
+                      <Route path="/b/audit" element={<AuditLog />} />
+                      {/* C端 */}
+                      <Route path="/c/coach" element={<Coach />} />
+                      <Route path="/c/apply" element={<Apply />} />
+                      <Route path="/c/endorsement" element={<Endorsement />} />
+                      <Route path="/c/decision-hub" element={<DecisionHub />} />
+                      {/* 专家端 */}
+                      <Route path="/expert/reviews" element={<Reviews />} />
+                      <Route path="/expert/rewards" element={<Rewards />} />
+                      {/* 国企端 */}
+                      <Route path="/soe/succession" element={<Succession />} />
+                      <Route path="/soe/commons" element={<Commons />} />
+                      {/* 默认重定向 */}
+                      <Route path="*" element={<Navigate to="/b/command" replace />} />
+                    </Routes>
+                    {state.showLineage && (
+                      <DecisionLineage onClose={() => dispatch({ type: 'CLOSE_LINEAGE' })} />
+                    )}
+                  </DashboardLayout>
                 )}
-              </DashboardLayout>
-            )}
-          </Suspense>
-        </BrowserRouter>
-      </AppContext.Provider>
+              </Suspense>
+            </BrowserRouter>
+          </AppContext.Provider>
+        </AuthProvider>
+      </QueryProvider>
     </ErrorBoundary>
   );
 }

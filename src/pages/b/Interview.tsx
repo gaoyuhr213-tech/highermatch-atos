@@ -1,6 +1,7 @@
-import { interviewSessions } from '../../data/mock-data';
-import { Bot, User, Info, Play, Pause, BarChart3, AlertTriangle, Shield, Zap, Mic, Video, FileText, Eye, Activity, Brain } from 'lucide-react';
+import { useInterviewSessions } from '../../lib/api/hooks';
+import { Bot, User, Info, Play, Pause, BarChart3, AlertTriangle, Shield, Zap, Mic, Video, FileText, Eye, Activity, Brain, Loader2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import type { InterviewSession } from '../../lib/api/types';
 
 const followUpQuestions = [
   { role: 'ai' as const, content: '追问：您提到的分布式事务方案在高并发场景下的降级策略是什么？能否结合具体案例说明？', timestamp: '实时追问' },
@@ -27,13 +28,23 @@ const scoringMatrix = [
 ];
 
 export default function Interview() {
-  const [selected, setSelected] = useState(interviewSessions[0]);
+  const { data: sessionsData, isLoading, error } = useInterviewSessions();
+  const [selected, setSelected] = useState<InterviewSession | null>(null);
   const [isLive, setIsLive] = useState(false);
   const [liveMessages, setLiveMessages] = useState<typeof followUpQuestions>([]);
   const [sseEvents, setSseEvents] = useState<string[]>([]);
   const [signalIdx, setSignalIdx] = useState(0);
   const [showMatrix, setShowMatrix] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const interviewSessions = sessionsData?.items || [];
+
+  // Auto-select first session when data loads
+  useEffect(() => {
+    if (interviewSessions.length > 0 && !selected) {
+      setSelected(interviewSessions[0]);
+    }
+  }, [interviewSessions, selected]);
 
   // SSE simulation
   useEffect(() => {
@@ -86,6 +97,10 @@ export default function Interview() {
     if (type === 'video') return <Video className="w-3 h-3 text-blue-500" />;
     return <FileText className="w-3 h-3 text-emerald-500" />;
   };
+
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载面试数据...</span></div>;
+  if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
+  if (!selected) return <div className="p-8 text-center text-slate-400">暂无面试数据</div>;
 
   return (
     <div className="p-8 h-full flex flex-col">

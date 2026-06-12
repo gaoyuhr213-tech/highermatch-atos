@@ -1,7 +1,7 @@
-import { decisionProposals, orgHealthMetrics, sseEvents } from '../../data/mock-data';
+import { useDecisionProposals, useOrgHealthMetrics, useSSEEvents } from '../../lib/api/hooks';
 import TrustChainVisualizer from '../../components/TrustChainVisualizer';
 import CABadge from '../../components/CABadge';
-import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, ArrowRight, Bell, Zap, Fingerprint, Keyboard, X, ToggleLeft, ToggleRight, FileText, BarChart3 } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, ArrowRight, Bell, Zap, Fingerprint, Keyboard, X, ToggleLeft, ToggleRight, FileText, BarChart3, Loader2 } from 'lucide-react';
 import { useApp } from '../../App';
 import { useState, useEffect } from 'react';
 
@@ -16,22 +16,36 @@ const featureFlags = [
 
 export default function CommandCenter() {
   const { setShowLineage } = useApp();
-  const metrics = Object.values(orgHealthMetrics);
+  const { data: proposalsData, isLoading: proposalsLoading } = useDecisionProposals({ status: 'pending' });
+  const { data: metricsData, isLoading: metricsLoading } = useOrgHealthMetrics();
+  const { data: eventsData } = useSSEEvents();
+
+  const metrics = metricsData ? Object.values(metricsData) : [];
+  const decisionProposals = proposalsData?.items || [];
   const pending = decisionProposals.filter(d => d.status === 'pending');
-  const [liveEvents, setLiveEvents] = useState(sseEvents.slice(0, 3));
+  const sseEvents = eventsData?.items || [];
+
+  const [liveEvents, setLiveEvents] = useState<typeof sseEvents>([]);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [approvedIds, setApprovedIds] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState<'decisions' | 'flags' | 'reports'>('decisions');
   const [flags, setFlags] = useState(featureFlags);
 
+  // Initialize live events when SSE data loads
+  useEffect(() => {
+    if (sseEvents.length > 0 && liveEvents.length === 0) {
+      setLiveEvents(sseEvents.slice(0, 3));
+    }
+  }, [sseEvents]);
+
   // SSE simulation - new events appear over time
   useEffect(() => {
-    if (liveEvents.length >= sseEvents.length) return;
+    if (sseEvents.length === 0 || liveEvents.length >= sseEvents.length) return;
     const timer = setTimeout(() => {
       setLiveEvents(prev => [...prev, sseEvents[prev.length]]);
     }, 4000);
     return () => clearTimeout(timer);
-  }, [liveEvents.length]);
+  }, [liveEvents.length, sseEvents]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -54,6 +68,8 @@ export default function CommandCenter() {
     const a = document.createElement('a'); a.href = url; a.download = `command-center-report-${Date.now()}.txt`; a.click();
     URL.revokeObjectURL(url);
   };
+
+  if (proposalsLoading || metricsLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载决策数据...</span></div>;
 
   return (
     <div className="p-8 max-w-[1400px] mx-auto">

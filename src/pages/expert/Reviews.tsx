@@ -1,8 +1,10 @@
-import { expertReviews } from '../../data/mock-data';
-import { Star, Clock, Eye, ChevronDown, ChevronUp, Shield, CheckCircle2, AlertCircle } from 'lucide-react';
+import { useExpertReviews, useSubmitReview } from '../../lib/api/hooks';
+import { Star, Clock, Eye, ChevronDown, ChevronUp, Shield, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Reviews() {
+  const { data: reviewsData, isLoading, error } = useExpertReviews();
+  const submitMutation = useSubmitReview();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState<Set<string>>(new Set());
   const [scores, setScores] = useState<Record<string, Record<string, number>>>({});
@@ -12,10 +14,18 @@ export default function Reviews() {
   };
 
   const handleSubmit = (reviewId: string) => {
+    const reviewScores = scores[reviewId] || {};
+    const avgScore = Object.values(reviewScores).reduce((a, b) => a + b, 0) / Object.values(reviewScores).length;
+    submitMutation.mutate({ id: reviewId, payload: { score: avgScore, comments: '' } });
     setSubmitted(prev => new Set([...prev, reviewId]));
   };
 
   const dimensions = ['专业深度', '实战经验', '学习能力', '团队协作', '创新思维'];
+
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载评审任务...</span></div>;
+  if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
+
+  const expertReviews = reviewsData?.items || [];
 
   return (
     <div className="p-8 max-w-[1100px] mx-auto">

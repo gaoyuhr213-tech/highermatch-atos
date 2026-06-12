@@ -1,20 +1,25 @@
-import { graphNodes, graphEdges } from '../../data/mock-data';
-import { ZoomIn, ZoomOut, Maximize2, Shield, X, User, Building2, Code, Briefcase, Search } from 'lucide-react';
+import { useGraphNodes, useGraphEdges } from '../../lib/api/hooks';
+import { ZoomIn, ZoomOut, Maximize2, Shield, X, User, Building2, Code, Briefcase, Search, Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import type { GraphNode } from '../../lib/api/types';
 
 const typeColors: Record<string, string> = { talent: '#2563EB', company: '#10B981', skill: '#F59E0B', position: '#8B5CF6' };
 const typeLabels: Record<string, string> = { talent: '人才', company: '企业', skill: '技能', position: '岗位' };
 const typeIcons: Record<string, typeof User> = { talent: User, company: Building2, skill: Code, position: Briefcase };
 const edgeTypeLabels: Record<string, string> = { employed_at: '任职于', has_skill: '具备技能', referred_by: '推荐关系' };
 
-interface GraphNode { id: string; name: string; type: string; x: number; y: number; connections: number; caVerified: boolean; }
-
 export default function Graph() {
+  const { data: nodesData, isLoading: nodesLoading } = useGraphNodes();
+  const { data: edgesData, isLoading: edgesLoading } = useGraphEdges();
   const [zoom, setZoom] = useState(1);
   const [selected, setSelected] = useState<GraphNode | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showEdgeLabels, setShowEdgeLabels] = useState(true);
+
+  const isLoading = nodesLoading || edgesLoading;
+  const graphNodes = nodesData?.items || [];
+  const graphEdges = edgesData?.items || [];
 
   const getConnectedNodes = (nodeId: string) => {
     const edgeIds = graphEdges.filter(e => e.source === nodeId || e.target === nodeId).map(e => e.source === nodeId ? e.target : e.source);
@@ -25,6 +30,8 @@ export default function Graph() {
 
   const filteredNodes = searchTerm ? graphNodes.filter(n => n.name.toLowerCase().includes(searchTerm.toLowerCase())) : graphNodes;
   const highlightedIds = new Set(filteredNodes.map(n => n.id));
+
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载人才图谱...</span></div>;
 
   return (
     <div className="p-8 h-full flex flex-col">

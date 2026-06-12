@@ -1,9 +1,9 @@
 import { useState, useCallback } from 'react';
-import { pipelineCandidates } from '../../data/mock-data';
-import type { PipelineCandidate } from '../../data/mock-data';
+import { usePipelineCandidates, useMoveStage, useResolveSuspendGate } from '../../lib/api/hooks';
+import type { PipelineCandidate } from '../../lib/api/types';
 import { DndContext, closestCenter, useDraggable, useDroppable } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
-import { AlertTriangle, Download, Filter, X, CheckSquare, Square, Shield, Lock, Unlock, Flag } from 'lucide-react';
+import { AlertTriangle, Download, Filter, X, CheckSquare, Square, Shield, Lock, Unlock, Flag, Loader2 } from 'lucide-react';
 
 const stages = [
   { key: 'sourcing', label: '寻访', color: 'border-t-slate-400' },
@@ -65,7 +65,10 @@ function DraggableCard({ candidate, selected, onSelect, onContextMenu, onSuspend
 }
 
 export default function Pipeline() {
-  const [candidates, setCandidates] = useState<PipelineCandidate[]>(pipelineCandidates);
+  const { data: pipelineData, isLoading, error } = usePipelineCandidates();
+  const moveStageMutation = useMoveStage();
+  const resolveGateMutation = useResolveSuspendGate();
+  const [localCandidates, setLocalCandidates] = useState<PipelineCandidate[] | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; candidateId: string } | null>(null);
   const [showFilter, setShowFilter] = useState(false);
@@ -75,30 +78,44 @@ export default function Pipeline() {
   const [showFlags, setShowFlags] = useState(false);
   const [flags, setFlags] = useState(featureFlags);
 
+  const serverCandidates = pipelineData?.items || [];
+  const candidates = localCandidates || serverCandidates;
+
+  // Sync server data to local on first load
+  if (!localCandidates && serverCandidates.length > 0) {
+    setLocalCandidates([...serverCandidates]);
+  }
+
+  const setCandidates = (updater: (prev: PipelineCandidate[]) => PipelineCandidate[]) => {
+    setLocalCandidates(prev => updater(prev || []));
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
     const targetStage = over.id as string;
     const candidate = candidates.find(c => c.id === active.id);
-    // SuspendGate: block advancement if gate is active
     if (candidate?.suspendGate && stages.findIndex(s => s.key === targetStage) > stages.findIndex(s => s.key === candidate.stage)) {
       setSuspendModal(candidate);
       return;
     }
     if (stages.some(s => s.key === targetStage)) {
+      moveStageMutation.mutate({ candidateId: active.id as string, newStage: targetStage });
       setCandidates(prev => prev.map(c => c.id === active.id ? { ...c, stage: targetStage as PipelineCandidate['stage'] } : c));
     }
   };
 
   const handleResolveGate = () => {
     setResolving(true);
-    setTimeout(() => {
-      setResolving(false);
-      if (suspendModal) {
-        setCandidates(prev => prev.map(c => c.id === suspendModal.id ? { ...c, suspendGate: undefined } : c));
-      }
-      setSuspendModal(null);
-    }, 2000);
+    if (suspendModal) {
+      resolveGateMutation.mutate(suspendModal.id, {
+        onSettled: () => {
+          setResolving(false);
+          setCandidates(prev => prev.map(c => c.id === suspendModal.id ? { ...c, suspendGate: undefined } : c));
+          setSuspendModal(null);
+        },
+      });
+    }
   };
 
   const handleSelect = (id: string) => {
@@ -114,11 +131,13 @@ export default function Pipeline() {
     if (!contextMenu) return;
     const candidate = candidates.find(c => c.id === contextMenu.candidateId);
     if (candidate?.suspendGate) { setSuspendModal(candidate); setContextMenu(null); return; }
+    moveStageMutation.mutate({ candidateId: contextMenu.candidateId, newStage: stage });
     setCandidates(prev => prev.map(c => c.id === contextMenu.candidateId ? { ...c, stage: stage as PipelineCandidate['stage'] } : c));
     setContextMenu(null);
   };
 
   const batchMoveToStage = (stage: string) => {
+    selectedIds.forEach(id => moveStageMutation.mutate({ candidateId: id, newStage: stage }));
     setCandidates(prev => prev.map(c => selectedIds.has(c.id) ? { ...c, stage: stage as PipelineCandidate['stage'] } : c));
     setSelectedIds(new Set());
   };
@@ -132,6 +151,9 @@ export default function Pipeline() {
     const a = document.createElement('a'); a.href = url; a.download = 'pipeline_export.csv'; a.click();
     URL.revokeObjectURL(url);
   }, [candidates]);
+
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载流水线数据...</span></div>;
+  if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
 
   const filteredCandidates = filterScore > 0 ? candidates.filter(c => c.matchScore >= filterScore) : candidates;
 

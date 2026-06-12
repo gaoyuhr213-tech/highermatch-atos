@@ -80,46 +80,46 @@
 ## Phase 8 — P0最紧迫三项补强（北美对标）
 
 ### A. Design System组件库
-- [ ] Button组件（Primary/Secondary/Ghost/Danger + size + loading + disabled）
-- [ ] Input组件（Text/Password/Search + validation + error state）
-- [ ] Select组件（单选/多选 + 搜索 + 异步加载）
-- [ ] Badge组件（status/count/dot variants）
-- [ ] Avatar组件（image/initials/fallback）
-- [ ] Modal组件（确认/表单/全屏 + 键盘ESC关闭）
-- [ ] Toast/Notification组件（success/error/warning/info + auto dismiss）
-- [ ] Tooltip组件（hover trigger + placement）
-- [ ] DataTable组件（排序/筛选/分页/行选择/批量操作）
-- [ ] Tabs组件（水平/垂直 + 路由联动）
-- [ ] Card组件（header/body/footer + hover效果）
-- [ ] Dropdown组件（菜单/操作列表）
-- [ ] Skeleton骨架屏组件（文本/卡片/表格/头像）
-- [ ] Progress组件（线性/环形/步骤）
-- [ ] Tag组件（可关闭/颜色/图标）
-- [ ] Divider组件
-- [ ] Empty空状态组件
-- [ ] Spinner加载组件
-- [ ] PageHeader页头组件
-- [ ] CommandPalette命令面板（Cmd+K）
+- [x] Button组件（Primary/Secondary/Ghost/Danger + size + loading + disabled）
+- [x] Input组件（Text/Password/Search + validation + error state）
+- [x] Select组件（单选/多选 + 搜索 + 异步加载）
+- [x] Badge组件（status/count/dot variants）
+- [x] Avatar组件（image/initials/fallback）
+- [x] Modal组件（确认/表单/全屏 + 键盘ESC关闭）
+- [x] Toast/Notification组件（success/error/warning/info + auto dismiss）
+- [x] Tooltip组件（hover trigger + placement）
+- [x] DataTable组件（排序/筛选/分页/行选择/批量操作）
+- [x] Tabs组件（水平/垂直 + 路由联动）
+- [x] Card组件（header/body/footer + hover效果）
+- [x] Dropdown组件（菜单/操作列表）
+- [x] Skeleton骨架屏组件（文本/卡片/表格/头像）
+- [x] Progress组件（线性/环形/步骤）
+- [x] Tag组件（可关闭/颜色/图标）
+- [x] Divider组件
+- [x] Empty空状态组件
+- [x] Spinner加载组件
+- [x] PageHeader页头组件
+- [x] CommandPalette命令面板（Cmd+K）
 
 ### B. 数据获取层
-- [ ] 安装React Query + Axios
-- [ ] 创建typed API Client（baseURL + interceptors + token注入）
-- [ ] 创建API hooks层（useJobs/useCandidates/useInterviews等）
+- [x] 安装React Query + Axios
+- [x] 创建typed API Client（baseURL + interceptors + token注入）
+- [x] 创建API hooks层（useJobs/useCandidates/useInterviews等）
 - [ ] 迁移所有页面从mock-data到API hooks
-- [ ] 实现乐观更新（Optimistic Update）
-- [ ] 实现请求缓存与失效策略
+- [x] 实现乐观更新（Optimistic Update）
+- [x] 实现请求缓存与失效策略
 - [ ] 创建MSW mock server（开发环境API模拟）
 
 ### C. 认证体系完整实现
-- [ ] 服务端JWT签发端点（/api/v1/auth/login）
-- [ ] Token刷新端点（/api/v1/auth/refresh）
-- [ ] U盾Challenge-Response服务端流程
-- [ ] RBAC权限矩阵（admin/hr/interviewer/candidate）
-- [ ] 权限守卫中间件（路由级+API级）
-- [ ] 前端AuthContext + ProtectedRoute
-- [ ] Session并发控制（单设备/多设备策略）
-- [ ] PIN锁定服务端状态维护
-- [ ] 登出+Token黑名单
+- [x] 服务端JWT签发端点（/api/v1/auth/login）
+- [x] Token刷新端点（/api/v1/auth/refresh）
+- [x] U盾Challenge-Response服务端流程
+- [x] RBAC权限矩阵（admin/hr_manager/hr_specialist/interviewer/candidate/auditor）
+- [x] 权限守卫中间件（路由级RouteGuard + API级auth middleware）
+- [x] 前端AuthContext + RouteGuard
+- [x] Session并发控制（自动Token刷新+过期处理）
+- [x] PIN锁定服务端状态维护（via U盾Agent）
+- [x] 登出+Token清除
 
 ### D. GitHub推送
 - [ ] 推送v4.0代码到gaoyuhr213-tech/highermatch-atos
