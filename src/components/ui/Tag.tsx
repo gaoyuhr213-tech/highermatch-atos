@@ -12,8 +12,8 @@ interface TagProps {
 }
 
 const colorStyles: Record<TagColor, string> = {
-  default: 'bg-slate-100 text-slate-600 border-slate-200',
-  primary: 'bg-primary-50 text-primary-700 border-primary-200',
+  default: 'bg-ink-100 text-muted border-border',
+  primary: 'bg-brand-50 text-brand-700 border-brand-200',
   success: 'bg-success-50 text-green-700 border-green-200',
   warning: 'bg-warning-50 text-amber-700 border-amber-200',
   error: 'bg-error-50 text-red-700 border-red-200',

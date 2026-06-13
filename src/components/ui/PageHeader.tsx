@@ -26,7 +26,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
     <div className={`space-y-3 ${className}`}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-1.5 text-xs text-slate-400">
+        <nav className="flex items-center gap-1.5 text-xs text-muted">
           {breadcrumbs.map((crumb, i) => (
             <React.Fragment key={i}>
               {i > 0 && (
@@ -35,9 +35,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
                 </svg>
               )}
               {crumb.href ? (
-                <a href={crumb.href} className="hover:text-slate-600 transition-colors">{crumb.label}</a>
+                <a href={crumb.href} className="hover:text-muted transition-colors">{crumb.label}</a>
               ) : (
-                <span className="text-slate-600 font-medium">{crumb.label}</span>
+                <span className="text-muted font-medium">{crumb.label}</span>
               )}
             </React.Fragment>
           ))}
@@ -47,8 +47,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       {/* Title Row */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">{title}</h1>
-          {subtitle && <p className="mt-0.5 text-sm text-slate-500">{subtitle}</p>}
+          <h1 className="text-xl font-bold text-foreground">{title}</h1>
+          {subtitle && <p className="mt-0.5 text-sm text-muted">{subtitle}</p>}
         </div>
         {actions && <div className="flex items-center gap-2">{actions}</div>}
       </div>

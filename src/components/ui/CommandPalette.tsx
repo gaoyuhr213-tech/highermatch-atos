@@ -83,11 +83,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-start justify-center pt-[15vh]">
-      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
-      <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-elevated overflow-hidden animate-[scaleIn_150ms_ease-out]">
+      <div className="absolute inset-0 bg-ink-900/50 backdrop-blur-sm" onClick={() => setOpen(false)} />
+      <div className="relative w-full max-w-lg bg-surface rounded-2xl shadow-elevated overflow-hidden animate-[scaleIn_150ms_ease-out]">
         {/* Search Input */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
-          <svg className="w-5 h-5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
+          <svg className="w-5 h-5 text-muted shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -96,9 +96,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             onChange={(e) => { setQuery(e.target.value); setActiveIndex(0); }}
             onKeyDown={handleInternalKeyDown}
             placeholder={placeholder}
-            className="flex-1 text-sm text-slate-900 placeholder:text-slate-400 outline-none bg-transparent"
+            className="flex-1 text-sm text-foreground placeholder:text-muted outline-none bg-transparent"
           />
-          <kbd className="px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-slate-100 rounded border border-slate-200">
+          <kbd className="px-1.5 py-0.5 text-[10px] font-mono text-muted bg-ink-100 rounded border border-border">
             ESC
           </kbd>
         </div>
@@ -106,11 +106,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         {/* Results */}
         <div className="max-h-80 overflow-y-auto p-2">
           {filtered.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-slate-400">未找到匹配结果</div>
+            <div className="px-4 py-8 text-center text-sm text-muted">未找到匹配结果</div>
           ) : (
             Object.entries(grouped).map(([group, groupItems]) => (
               <div key={group} className="mb-2">
-                <div className="px-3 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                <div className="px-3 py-1.5 text-[10px] font-semibold text-muted uppercase tracking-wider">
                   {group}
                 </div>
                 {groupItems.map((item) => {
@@ -125,16 +125,16 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       onMouseEnter={() => setActiveIndex(idx)}
                       className={[
                         'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors',
-                        isActive ? 'bg-primary-50 text-primary-700' : 'text-slate-700 hover:bg-slate-50',
+                        isActive ? 'bg-brand-50 text-brand-700' : 'text-foreground hover:bg-ink-50',
                       ].join(' ')}
                     >
-                      {item.icon && <span className="shrink-0 w-5 h-5 text-slate-400">{item.icon}</span>}
+                      {item.icon && <span className="shrink-0 w-5 h-5 text-muted">{item.icon}</span>}
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-medium truncate">{item.label}</div>
-                        {item.description && <div className="text-xs text-slate-400 truncate">{item.description}</div>}
+                        {item.description && <div className="text-xs text-muted truncate">{item.description}</div>}
                       </div>
                       {item.shortcut && (
-                        <kbd className="shrink-0 px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-slate-100 rounded border border-slate-200">
+                        <kbd className="shrink-0 px-1.5 py-0.5 text-[10px] font-mono text-muted bg-ink-100 rounded border border-border">
                           {item.shortcut}
                         </kbd>
                       )}
@@ -147,12 +147,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2 border-t border-slate-100 bg-slate-25">
-          <div className="flex items-center gap-3 text-[10px] text-slate-400">
-            <span><kbd className="px-1 py-0.5 bg-slate-100 rounded border border-slate-200">↑↓</kbd> 导航</span>
-            <span><kbd className="px-1 py-0.5 bg-slate-100 rounded border border-slate-200">↵</kbd> 执行</span>
+        <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-ink-25">
+          <div className="flex items-center gap-3 text-[10px] text-muted">
+            <span><kbd className="px-1 py-0.5 bg-ink-100 rounded border border-border">↑↓</kbd> 导航</span>
+            <span><kbd className="px-1 py-0.5 bg-ink-100 rounded border border-border">↵</kbd> 执行</span>
           </div>
-          <span className="text-[10px] text-slate-300">HigherMatch™ ATOS</span>
+          <span className="text-[10px] text-ink-300">HigherMatch™ ATOS</span>
         </div>
       </div>
     </div>

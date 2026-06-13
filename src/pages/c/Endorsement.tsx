@@ -53,20 +53,20 @@ export default function Endorsement() {
     }
   };
 
-  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载背书卡片...</span></div>;
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /><span className="ml-3 text-muted">加载背书卡片...</span></div>;
   if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
 
   return (
     <div className="p-8 max-w-[1200px] mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <div><h1 className="text-2xl font-bold text-slate-900">背书卡片</h1><p className="text-sm text-slate-500 mt-1">Endorsement Card · CA签名可信职业背书</p></div>
+        <div><h1 className="text-2xl font-bold text-foreground">背书卡片</h1><p className="text-sm text-muted mt-1">Endorsement Card · CA签名可信职业背书</p></div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-2 text-xs text-muted">
             {statusFlow.map((s, i) => (
               <span key={s} className="flex items-center gap-1">
-                <span className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-primary-400' : i === statusFlow.length - 1 ? 'bg-success-500' : 'bg-slate-300'}`} />
+                <span className={`w-2 h-2 rounded-full ${i === 0 ? 'bg-brand-400' : i === statusFlow.length - 1 ? 'bg-ok-500' : 'bg-ink-300'}`} />
                 {statusMap[s].label}
-                {i < statusFlow.length - 1 && <span className="text-slate-300 mx-1">→</span>}
+                {i < statusFlow.length - 1 && <span className="text-muted mx-1">→</span>}
               </span>
             ))}
           </div>
@@ -83,7 +83,7 @@ export default function Endorsement() {
               <div className="flex items-center gap-1 mb-4">
                 {statusFlow.map((s, i) => (
                   <div key={s} className="flex items-center flex-1">
-                    <div className={`w-full h-1 rounded-full ${i <= currentIdx ? 'bg-primary-500' : 'bg-slate-100'}`} />
+                    <div className={`w-full h-1 rounded-full ${i <= currentIdx ? 'bg-brand-500' : 'bg-ink-100'}`} />
                   </div>
                 ))}
               </div>
@@ -92,18 +92,18 @@ export default function Endorsement() {
                   <StatusIcon className="w-4 h-4 text-trust-500" />
                   <span className={`badge ${statusMap[card.status].cls}`}>{statusMap[card.status].label}</span>
                 </div>
-                <span className="text-[10px] text-slate-400">{card.createdAt}</span>
+                <span className="text-[10px] text-muted">{card.createdAt}</span>
               </div>
-              <h3 className="text-base font-semibold text-slate-800 mb-1">{card.candidate}</h3>
-              <p className="text-sm text-slate-600 mb-3">{card.position}</p>
+              <h3 className="text-base font-semibold text-foreground mb-1">{card.candidate}</h3>
+              <p className="text-sm text-muted mb-3">{card.position}</p>
               <div className="space-y-2 mb-4 flex-1">
-                <div className="flex items-center justify-between text-xs"><span className="text-slate-500">签发机构</span><span className="text-slate-700 font-medium">{card.issuer}</span></div>
-                <div className="flex items-center justify-between text-xs"><span className="text-slate-500">CA签名</span><span className="text-trust-600 font-mono text-[10px]">{card.caSignature}</span></div>
-                <div className="flex items-center justify-between text-xs"><span className="text-slate-500">SM3哈希</span><span className="text-slate-600 font-mono text-[10px]">{card.sm3Hash}</span></div>
-                <div className="flex items-center justify-between text-xs"><span className="text-slate-500">验证次数</span><span className="text-primary-600 font-medium">{card.verifiedCount}次</span></div>
+                <div className="flex items-center justify-between text-xs"><span className="text-muted">签发机构</span><span className="text-foreground font-medium">{card.issuer}</span></div>
+                <div className="flex items-center justify-between text-xs"><span className="text-muted">CA签名</span><span className="text-trust-600 font-mono text-[10px]">{card.caSignature}</span></div>
+                <div className="flex items-center justify-between text-xs"><span className="text-muted">SM3哈希</span><span className="text-muted font-mono text-[10px]">{card.sm3Hash}</span></div>
+                <div className="flex items-center justify-between text-xs"><span className="text-muted">验证次数</span><span className="text-brand-600 font-medium">{card.verifiedCount}次</span></div>
               </div>
-              <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
-                <button onClick={() => handleShare(card.id)} className={`btn-ghost flex-1 ${card.status === 'signed' ? 'text-primary-600 hover:bg-primary-50' : ''}`}><Share2 className="w-3.5 h-3.5" />分享</button>
+              <div className="flex items-center gap-2 pt-3 border-t border-border">
+                <button onClick={() => handleShare(card.id)} className={`btn-ghost flex-1 ${card.status === 'signed' ? 'text-brand-600 hover:bg-brand-50' : ''}`}><Share2 className="w-3.5 h-3.5" />分享</button>
                 <button onClick={() => setShowQR(card.id)} className="btn-ghost flex-1"><QrCode className="w-3.5 h-3.5" />二维码</button>
                 <button onClick={() => handleVerify(card.id)} className={`btn-ghost flex-1 ${card.status === 'shared' ? 'text-trust-600 hover:bg-trust-50' : ''}`}><ExternalLink className="w-3.5 h-3.5" />验证</button>
               </div>
@@ -115,20 +115,20 @@ export default function Endorsement() {
       {/* QR Code Modal */}
       {showQR && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowQR(null)}>
-          <div className="bg-white rounded-2xl p-6 w-80 shadow-elevated" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface rounded-2xl p-6 w-80 shadow-elevated" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-slate-800">背书卡片二维码</h3>
+              <h3 className="text-sm font-semibold text-foreground">背书卡片二维码</h3>
               <button onClick={() => setShowQR(null)} className="btn-ghost p-1"><X className="w-4 h-4" /></button>
             </div>
-            <div className="w-48 h-48 mx-auto bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center mb-4">
+            <div className="w-48 h-48 mx-auto bg-ink-50 rounded-xl border-2 border-dashed border-border flex items-center justify-center mb-4">
               <div className="text-center">
-                <QrCode className="w-16 h-16 text-slate-300 mx-auto mb-2" />
-                <p className="text-xs text-slate-400">扫码验证背书真实性</p>
+                <QrCode className="w-16 h-16 text-muted mx-auto mb-2" />
+                <p className="text-xs text-muted">扫码验证背书真实性</p>
               </div>
             </div>
             <div className="text-center">
-              <p className="text-xs text-slate-500 mb-2">分享链接</p>
-              <div className="bg-slate-50 rounded-lg p-2 font-mono text-[10px] text-slate-600 break-all">
+              <p className="text-xs text-muted mb-2">分享链接</p>
+              <div className="bg-ink-50 rounded-lg p-2 font-mono text-[10px] text-muted break-all">
                 {cards.find(c => c.id === showQR)?.shareUrl || 'https://verify.sichuan-ca.cn/...'}
               </div>
             </div>
@@ -139,9 +139,9 @@ export default function Endorsement() {
       {/* Verify Modal */}
       {showVerify && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowVerify(null)}>
-          <div className="bg-white rounded-2xl p-6 w-96 shadow-elevated" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface rounded-2xl p-6 w-96 shadow-elevated" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-slate-800">背书验证结果</h3>
+              <h3 className="text-sm font-semibold text-foreground">背书验证结果</h3>
               <button onClick={() => setShowVerify(null)} className="btn-ghost p-1"><X className="w-4 h-4" /></button>
             </div>
             {(() => {
@@ -153,12 +153,12 @@ export default function Endorsement() {
                     <CheckCircle2 className="w-6 h-6 text-trust-600" />
                     <div><p className="text-sm font-semibold text-trust-800">验证通过</p><p className="text-xs text-trust-600">CA数字签名有效，背书内容未被篡改</p></div>
                   </div>
-                  <div className="space-y-2 p-3 bg-slate-50 rounded-xl">
-                    <div className="flex justify-between text-xs"><span className="text-slate-500">签名算法</span><span className="text-slate-700">SM2 (国密)</span></div>
-                    <div className="flex justify-between text-xs"><span className="text-slate-500">证书颁发</span><span className="text-slate-700">四川CA认证中心</span></div>
-                    <div className="flex justify-between text-xs"><span className="text-slate-500">签名时间</span><span className="text-slate-700">{card.createdAt}</span></div>
-                    <div className="flex justify-between text-xs"><span className="text-slate-500">OCSP状态</span><span className="text-trust-600 font-medium">Good</span></div>
-                    <div className="flex justify-between text-xs"><span className="text-slate-500">SM3哈希</span><span className="text-slate-600 font-mono text-[10px]">{card.sm3Hash}</span></div>
+                  <div className="space-y-2 p-3 bg-ink-50 rounded-xl">
+                    <div className="flex justify-between text-xs"><span className="text-muted">签名算法</span><span className="text-foreground">SM2 (国密)</span></div>
+                    <div className="flex justify-between text-xs"><span className="text-muted">证书颁发</span><span className="text-foreground">四川CA认证中心</span></div>
+                    <div className="flex justify-between text-xs"><span className="text-muted">签名时间</span><span className="text-foreground">{card.createdAt}</span></div>
+                    <div className="flex justify-between text-xs"><span className="text-muted">OCSP状态</span><span className="text-trust-600 font-medium">Good</span></div>
+                    <div className="flex justify-between text-xs"><span className="text-muted">SM3哈希</span><span className="text-muted font-mono text-[10px]">{card.sm3Hash}</span></div>
                   </div>
                 </div>
               );

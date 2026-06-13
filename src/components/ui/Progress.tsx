@@ -17,7 +17,7 @@ interface ProgressProps {
 }
 
 const colorStyles: Record<ProgressColor, string> = {
-  primary: 'bg-primary-500',
+  primary: 'bg-brand-500',
   success: 'bg-success-500',
   warning: 'bg-warning-500',
   error: 'bg-error-500',
@@ -64,7 +64,7 @@ export const Progress: React.FC<ProgressProps> = ({
           />
         </svg>
         {showLabel && (
-          <span className="absolute text-xs font-semibold text-slate-700">
+          <span className="absolute text-xs font-semibold text-foreground">
             {label || `${Math.round(pct)}%`}
           </span>
         )}
@@ -79,7 +79,7 @@ export const Progress: React.FC<ProgressProps> = ({
           <React.Fragment key={i}>
             <div className={[
               'w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-colors',
-              i < currentStep ? `${colorStyles[color]} text-white` : i === currentStep ? 'border-2 border-primary-500 text-primary-600 bg-primary-50' : 'bg-slate-100 text-slate-400',
+              i < currentStep ? `${colorStyles[color]} text-white` : i === currentStep ? 'border-2 border-brand-500 text-brand-600 bg-brand-50' : 'bg-ink-100 text-muted',
             ].join(' ')}>
               {i < currentStep ? (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -90,7 +90,7 @@ export const Progress: React.FC<ProgressProps> = ({
               )}
             </div>
             {i < steps - 1 && (
-              <div className={`flex-1 h-0.5 rounded ${i < currentStep ? colorStyles[color] : 'bg-slate-200'}`} />
+              <div className={`flex-1 h-0.5 rounded ${i < currentStep ? colorStyles[color] : 'bg-ink-200'}`} />
             )}
           </React.Fragment>
         ))}
@@ -103,11 +103,11 @@ export const Progress: React.FC<ProgressProps> = ({
     <div className={`w-full ${className}`}>
       {(showLabel || label) && (
         <div className="flex items-center justify-between mb-1.5">
-          {label && <span className="text-xs font-medium text-slate-600">{label}</span>}
-          {showLabel && <span className="text-xs text-slate-500">{Math.round(pct)}%</span>}
+          {label && <span className="text-xs font-medium text-muted">{label}</span>}
+          {showLabel && <span className="text-xs text-muted">{Math.round(pct)}%</span>}
         </div>
       )}
-      <div className={`w-full bg-slate-100 rounded-full overflow-hidden ${trackSizes[size]}`}>
+      <div className={`w-full bg-ink-100 rounded-full overflow-hidden ${trackSizes[size]}`}>
         <div
           className={`h-full rounded-full transition-all duration-500 ease-out ${colorStyles[color]}`}
           style={{ width: `${pct}%` }}

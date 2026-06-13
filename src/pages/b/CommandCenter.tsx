@@ -70,21 +70,21 @@ export default function CommandCenter() {
   };
 
   const loadError = proposalsError || metricsError;
-  if (proposalsLoading || metricsLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载决策数据...</span></div>;
+  if (proposalsLoading || metricsLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /><span className="ml-3 text-muted">加载决策数据...</span></div>;
   if (loadError) return <div className="p-8 text-center text-red-500">加载失败：{(loadError as Error).message}</div>;
 
   return (
     <div className="p-8 max-w-[1400px] mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">决策总控台</h1>
-          <p className="text-sm text-slate-500 mt-1">Command Center · 实时决策态势感知 · Feature Flags管控</p>
+          <h1 className="text-2xl font-bold text-foreground">决策总控台</h1>
+          <p className="text-sm text-muted mt-1">Command Center · 实时决策态势感知 · Feature Flags管控</p>
         </div>
         <div className="flex items-center gap-3">
           <button onClick={() => setShowShortcuts(true)} className="btn-ghost text-xs"><Keyboard className="w-4 h-4" />快捷键</button>
           <button onClick={handleExportReport} className="btn-ghost text-xs"><FileText className="w-4 h-4" />导出报告</button>
-          <button className="btn-secondary relative"><Bell className="w-4 h-4" />通知 <span className="absolute -top-1 -right-1 w-4 h-4 bg-error-500 text-white text-[9px] rounded-full flex items-center justify-center">3</span></button>
-          <button onClick={() => setShowLineage(true)} className="btn-secondary"><Fingerprint className="w-4 h-4" />决策血统 <span className="text-[10px] text-slate-400 ml-1">Ctrl+L</span></button>
+          <button className="btn-secondary relative"><Bell className="w-4 h-4" />通知 <span className="absolute -top-1 -right-1 w-4 h-4 bg-risk-500 text-white text-[9px] rounded-full flex items-center justify-center">3</span></button>
+          <button onClick={() => setShowLineage(true)} className="btn-secondary"><Fingerprint className="w-4 h-4" />决策血统 <span className="text-[10px] text-muted ml-1">Ctrl+L</span></button>
           <button className="btn-primary"><Zap className="w-4 h-4" />快速决策</button>
         </div>
       </div>
@@ -98,8 +98,8 @@ export default function CommandCenter() {
       <div className="grid grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         {metrics.map((m, i) => (
           <div key={i} className="stat-card">
-            <p className="text-xs text-slate-500 mb-1">{m.label}</p>
-            <p className="text-2xl font-bold text-slate-900">{m.value}</p>
+            <p className="text-xs text-muted mb-1">{m.label}</p>
+            <p className="text-2xl font-bold text-foreground">{m.value}</p>
             <div className="flex items-center gap-1 mt-1">
               {String(m.trend).startsWith('+') ? <TrendingUp className="w-3 h-3 text-emerald-500" /> : <TrendingDown className="w-3 h-3 text-red-500" />}
               <span className={`text-xs font-medium ${String(m.trend).startsWith('+') ? 'text-emerald-600' : 'text-red-600'}`}>{m.trend}</span>
@@ -109,16 +109,16 @@ export default function CommandCenter() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex items-center gap-1 mb-6 border-b border-slate-200">
+      <div className="flex items-center gap-1 mb-6 border-b border-border">
         {[
           { id: 'decisions' as const, label: '待决策队列', icon: CheckCircle2, count: pending.filter(d => !approvedIds.has(d.id)).length },
           { id: 'flags' as const, label: 'Feature Flags', icon: ToggleLeft, count: flags.filter(f => f.enabled).length },
           { id: 'reports' as const, label: '决策报表', icon: BarChart3 },
         ].map(tab => (
           <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${activeTab === tab.id ? 'border-primary-500 text-primary-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors ${activeTab === tab.id ? 'border-brand-500 text-brand-600' : 'border-transparent text-muted hover:text-foreground'}`}>
             <tab.icon className="w-4 h-4" />{tab.label}
-            {tab.count !== undefined && <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-primary-100 text-primary-700' : 'bg-slate-100 text-slate-500'}`}>{tab.count}</span>}
+            {tab.count !== undefined && <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeTab === tab.id ? 'bg-brand-100 text-brand-700' : 'bg-ink-100 text-muted'}`}>{tab.count}</span>}
           </button>
         ))}
       </div>
@@ -129,37 +129,37 @@ export default function CommandCenter() {
           {activeTab === 'decisions' && (
             <>
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-base font-semibold text-slate-800">待决策队列</h2>
+                <h2 className="text-base font-semibold text-foreground">待决策队列</h2>
                 <div className="flex items-center gap-2">
                   <span className="badge badge-blue">{pending.filter(d => !approvedIds.has(d.id)).length} 待处理</span>
-                  <button onClick={() => pending.forEach(d => handleApprove(d.id))} className="text-xs text-primary-600 hover:underline font-medium">批量审批</button>
+                  <button onClick={() => pending.forEach(d => handleApprove(d.id))} className="text-xs text-brand-600 hover:underline font-medium">批量审批</button>
                 </div>
               </div>
               <div className="space-y-3">
                 {pending.map(d => (
-                  <div key={d.id} className={`flex items-center gap-4 p-4 rounded-xl transition-all group ${approvedIds.has(d.id) ? 'bg-success-50/50 border border-success-100' : 'bg-slate-50/80 hover:bg-white hover:shadow-card border border-transparent'}`}>
+                  <div key={d.id} className={`flex items-center gap-4 p-4 rounded-xl transition-all group ${approvedIds.has(d.id) ? 'bg-ok-50/50 border border-ok-100' : 'bg-ink-50/80 hover:bg-surface hover:shadow-card border border-transparent'}`}>
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${d.riskLevel === 'high' ? 'bg-red-50 text-red-500' : d.riskLevel === 'medium' ? 'bg-amber-50 text-amber-500' : 'bg-emerald-50 text-emerald-500'}`}>
                       {d.riskLevel === 'high' ? <AlertTriangle className="w-5 h-5" /> : <CheckCircle2 className="w-5 h-5" />}
                     </div>
                     <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setShowLineage(true)}>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-slate-800">{d.candidate}</span>
+                        <span className="text-sm font-semibold text-foreground">{d.candidate}</span>
                         <span className="badge badge-blue">{d.type}</span>
                         {approvedIds.has(d.id) && <span className="badge badge-green">已审批</span>}
                       </div>
-                      <p className="text-xs text-slate-500 mt-0.5">{d.position} · 置信度 {d.confidence}% · {d.evidenceCount}条证据 · <span className="font-mono">{d.modelVersion}</span></p>
+                      <p className="text-xs text-muted mt-0.5">{d.position} · 置信度 {d.confidence}% · {d.evidenceCount}条证据 · <span className="font-mono">{d.modelVersion}</span></p>
                     </div>
                     <div className="text-right mr-2">
-                      <p className="text-xs text-slate-400">{d.timestamp.split(' ')[1]}</p>
-                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">{d.lineageHash}</p>
+                      <p className="text-xs text-muted">{d.timestamp.split(' ')[1]}</p>
+                      <p className="text-[10px] text-muted font-mono mt-0.5">{d.lineageHash}</p>
                     </div>
                     {!approvedIds.has(d.id) && (
                       <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => handleApprove(d.id)} className="text-xs px-3 py-1.5 bg-success-500 text-white rounded-lg hover:bg-success-600">通过</button>
-                        <button className="text-xs px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200">驳回</button>
+                        <button onClick={() => handleApprove(d.id)} className="text-xs px-3 py-1.5 bg-ok-500 text-white rounded-lg hover:bg-ok-600">通过</button>
+                        <button className="text-xs px-3 py-1.5 bg-ink-100 text-muted rounded-lg hover:bg-ink-200">驳回</button>
                       </div>
                     )}
-                    <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-primary-500 transition-colors cursor-pointer" onClick={() => setShowLineage(true)} />
+                    <ArrowRight className="w-4 h-4 text-muted group-hover:text-brand-500 transition-colors cursor-pointer" onClick={() => setShowLineage(true)} />
                   </div>
                 ))}
               </div>
@@ -169,25 +169,25 @@ export default function CommandCenter() {
           {activeTab === 'flags' && (
             <>
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-base font-semibold text-slate-800">Feature Flags 管控面板</h2>
-                <span className="text-xs text-slate-400">{flags.filter(f => f.enabled).length}/{flags.length} 已启用</span>
+                <h2 className="text-base font-semibold text-foreground">Feature Flags 管控面板</h2>
+                <span className="text-xs text-muted">{flags.filter(f => f.enabled).length}/{flags.length} 已启用</span>
               </div>
               <div className="space-y-3">
                 {flags.map(f => (
-                  <div key={f.id} className="flex items-center gap-4 p-4 rounded-xl bg-slate-50/80 hover:bg-white hover:shadow-card border border-transparent transition-all">
+                  <div key={f.id} className="flex items-center gap-4 p-4 rounded-xl bg-ink-50/80 hover:bg-surface hover:shadow-card border border-transparent transition-all">
                     <button onClick={() => toggleFlag(f.id)} className="flex-shrink-0">
-                      {f.enabled ? <ToggleRight className="w-8 h-8 text-primary-500" /> : <ToggleLeft className="w-8 h-8 text-slate-300" />}
+                      {f.enabled ? <ToggleRight className="w-8 h-8 text-brand-500" /> : <ToggleLeft className="w-8 h-8 text-muted" />}
                     </button>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-slate-800">{f.name}</span>
+                        <span className="text-sm font-semibold text-foreground">{f.name}</span>
                         <span className={`badge ${f.enabled ? 'badge-green' : 'badge-gray'}`}>{f.enabled ? '启用' : '禁用'}</span>
                       </div>
-                      <p className="text-xs text-slate-500 mt-0.5 font-mono">{f.key} · 范围: {f.scope} · {f.version}</p>
+                      <p className="text-xs text-muted mt-0.5 font-mono">{f.key} · 范围: {f.scope} · {f.version}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded hover:bg-slate-200">配置</button>
-                      <button className="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded hover:bg-slate-200">日志</button>
+                      <button className="text-xs px-2 py-1 bg-ink-100 text-muted rounded hover:bg-ink-200">配置</button>
+                      <button className="text-xs px-2 py-1 bg-ink-100 text-muted rounded hover:bg-ink-200">日志</button>
                     </div>
                   </div>
                 ))}
@@ -198,19 +198,19 @@ export default function CommandCenter() {
           {activeTab === 'reports' && (
             <>
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-base font-semibold text-slate-800">决策报表</h2>
+                <h2 className="text-base font-semibold text-foreground">决策报表</h2>
                 <button onClick={handleExportReport} className="btn-secondary text-xs"><FileText className="w-3.5 h-3.5" />导出</button>
               </div>
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="p-4 rounded-xl bg-primary-50/50 border border-primary-100">
-                  <p className="text-xs text-primary-600 font-medium">本周决策总量</p>
-                  <p className="text-3xl font-bold text-primary-700 mt-1">47</p>
-                  <p className="text-xs text-primary-500 mt-1">较上周 +12%</p>
+                <div className="p-4 rounded-xl bg-brand-50/50 border border-brand-100">
+                  <p className="text-xs text-brand-600 font-medium">本周决策总量</p>
+                  <p className="text-3xl font-bold text-brand-700 mt-1">47</p>
+                  <p className="text-xs text-brand-500 mt-1">较上周 +12%</p>
                 </div>
-                <div className="p-4 rounded-xl bg-success-50/50 border border-success-100">
-                  <p className="text-xs text-success-600 font-medium">AI自主率</p>
-                  <p className="text-3xl font-bold text-success-700 mt-1">72%</p>
-                  <p className="text-xs text-success-500 mt-1">目标 80%</p>
+                <div className="p-4 rounded-xl bg-ok-50/50 border border-ok-100">
+                  <p className="text-xs text-ok-600 font-medium">AI自主率</p>
+                  <p className="text-3xl font-bold text-ok-700 mt-1">72%</p>
+                  <p className="text-xs text-ok-500 mt-1">目标 80%</p>
                 </div>
                 <div className="p-4 rounded-xl bg-amber-50/50 border border-amber-100">
                   <p className="text-xs text-amber-600 font-medium">平均决策耗时</p>
@@ -223,16 +223,16 @@ export default function CommandCenter() {
                   <p className="text-xs text-violet-500 mt-1">合规目标 100%</p>
                 </div>
               </div>
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <p className="text-xs font-semibold text-slate-600 mb-3">决策类型分布</p>
+              <div className="p-4 rounded-xl bg-ink-50 border border-border">
+                <p className="text-xs font-semibold text-muted mb-3">决策类型分布</p>
                 <div className="space-y-2">
                   {[{ type: 'Hire', count: 23, pct: 49 }, { type: 'Promote', count: 12, pct: 26 }, { type: 'Transfer', count: 7, pct: 15 }, { type: 'Retain', count: 3, pct: 6 }, { type: 'Replace', count: 2, pct: 4 }].map(item => (
                     <div key={item.type} className="flex items-center gap-3">
-                      <span className="text-xs text-slate-600 w-16">{item.type}</span>
-                      <div className="flex-1 h-5 bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-primary-400 rounded-full transition-all" style={{ width: `${item.pct}%` }} />
+                      <span className="text-xs text-muted w-16">{item.type}</span>
+                      <div className="flex-1 h-5 bg-ink-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-brand-400 rounded-full transition-all" style={{ width: `${item.pct}%` }} />
                       </div>
-                      <span className="text-xs text-slate-500 w-12 text-right">{item.count}项</span>
+                      <span className="text-xs text-muted w-12 text-right">{item.count}项</span>
                     </div>
                   ))}
                 </div>
@@ -244,24 +244,24 @@ export default function CommandCenter() {
         {/* SSE Event Stream */}
         <div className="glass-card p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-semibold text-slate-800">实时事件流</h2>
-            <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /><span className="text-[10px] text-slate-400">SSE Live</span></div>
+            <h2 className="text-base font-semibold text-foreground">实时事件流</h2>
+            <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /><span className="text-[10px] text-muted">SSE Live</span></div>
           </div>
           <div className="space-y-3">
             {liveEvents.map((ev, i) => (
-              <div key={ev.id} className={`flex gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer ${i === liveEvents.length - 1 ? 'animate-in' : ''}`}>
-                <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${ev.priority === 'high' ? 'bg-red-500' : ev.priority === 'medium' ? 'bg-amber-500' : 'bg-slate-300'}`} />
+              <div key={ev.id} className={`flex gap-3 p-3 rounded-lg hover:bg-ink-50 transition-colors cursor-pointer ${i === liveEvents.length - 1 ? 'animate-in' : ''}`}>
+                <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${ev.priority === 'high' ? 'bg-risk-500' : ev.priority === 'medium' ? 'bg-amber-500' : 'bg-ink-300'}`} />
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-slate-700">{ev.title}</p>
-                  <p className="text-xs text-slate-500 mt-0.5 truncate">{ev.description}</p>
-                  <p className="text-[10px] text-slate-400 mt-1">{ev.timestamp}</p>
+                  <p className="text-sm font-medium text-foreground">{ev.title}</p>
+                  <p className="text-xs text-muted mt-0.5 truncate">{ev.description}</p>
+                  <p className="text-[10px] text-muted mt-1">{ev.timestamp}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-4 border-t border-slate-100">
-            <p className="text-[10px] text-slate-400 text-center">基于Server-Sent Events协议实时推送</p>
-            <p className="text-[10px] text-slate-400 text-center mt-0.5">延迟 &lt; 200ms · 连接状态: 活跃</p>
+          <div className="mt-4 pt-4 border-t border-border">
+            <p className="text-[10px] text-muted text-center">基于Server-Sent Events协议实时推送</p>
+            <p className="text-[10px] text-muted text-center mt-0.5">延迟 &lt; 200ms · 连接状态: 活跃</p>
           </div>
         </div>
       </div>
@@ -269,9 +269,9 @@ export default function CommandCenter() {
       {/* Shortcuts Modal */}
       {showShortcuts && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50" onClick={() => setShowShortcuts(false)}>
-          <div className="bg-white rounded-2xl shadow-elevated p-6 w-96" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface rounded-2xl shadow-elevated p-6 w-96" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-slate-800">键盘快捷键</h3>
+              <h3 className="text-sm font-semibold text-foreground">键盘快捷键</h3>
               <button onClick={() => setShowShortcuts(false)} className="btn-ghost p-1"><X className="w-4 h-4" /></button>
             </div>
             <div className="space-y-2">
@@ -283,9 +283,9 @@ export default function CommandCenter() {
                 ['Esc', '关闭弹窗'],
                 ['Tab', '切换面板标签'],
               ].map(([key, desc]) => (
-                <div key={key} className="flex items-center justify-between p-2 rounded-lg bg-slate-50">
-                  <span className="text-xs text-slate-600">{desc}</span>
-                  <kbd className="px-2 py-1 bg-white border border-slate-200 rounded text-[10px] font-mono text-slate-700 shadow-sm">{key}</kbd>
+                <div key={key} className="flex items-center justify-between p-2 rounded-lg bg-ink-50">
+                  <span className="text-xs text-muted">{desc}</span>
+                  <kbd className="px-2 py-1 bg-surface border border-border rounded text-[10px] font-mono text-foreground shadow-sm">{key}</kbd>
                 </div>
               ))}
             </div>

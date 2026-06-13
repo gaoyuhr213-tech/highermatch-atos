@@ -48,7 +48,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       {visible && content && (
         <div
           className={[
-            'absolute z-[9999] px-2.5 py-1.5 text-xs font-medium text-white bg-slate-800 rounded-lg shadow-lg',
+            'absolute z-[9999] px-2.5 py-1.5 text-xs font-medium text-white bg-ink-800 rounded-lg shadow-lg',
             'whitespace-nowrap pointer-events-none animate-[fadeIn_100ms_ease-out]',
             placementStyles[placement],
             className,

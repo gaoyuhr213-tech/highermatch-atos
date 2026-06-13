@@ -44,22 +44,22 @@ export const Tabs: React.FC<TabsProps> = ({
     if (variant === 'line') {
       return `${base} ${disabledClass} px-1 pb-2.5 border-b-2 ${
         isActive
-          ? 'text-primary-600 border-primary-500'
-          : 'text-slate-500 border-transparent hover:text-slate-700 hover:border-slate-300'
+          ? 'text-brand-600 border-brand-500'
+          : 'text-muted border-transparent hover:text-foreground hover:border-ink-300'
       }`;
     }
     if (variant === 'pill') {
       return `${base} ${disabledClass} px-3 py-1.5 rounded-lg ${
         isActive
-          ? 'bg-primary-500 text-white shadow-sm'
-          : 'text-slate-600 hover:bg-slate-100'
+          ? 'bg-brand-500 text-white shadow-sm'
+          : 'text-muted hover:bg-ink-100'
       }`;
     }
     // enclosed
     return `${base} ${disabledClass} px-4 py-2 rounded-t-lg border border-b-0 ${
       isActive
-        ? 'bg-white text-primary-600 border-slate-200 -mb-px'
-        : 'text-slate-500 border-transparent hover:text-slate-700'
+        ? 'bg-surface text-brand-600 border-border -mb-px'
+        : 'text-muted border-transparent hover:text-foreground'
     }`;
   };
 
@@ -67,7 +67,7 @@ export const Tabs: React.FC<TabsProps> = ({
 
   return (
     <div className={className}>
-      <div className={`flex gap-1 ${variant === 'line' ? 'border-b border-slate-200' : ''} ${variant === 'enclosed' ? 'border-b border-slate-200' : ''}`}>
+      <div className={`flex gap-1 ${variant === 'line' ? 'border-b border-border' : ''} ${variant === 'enclosed' ? 'border-b border-border' : ''}`}>
         {items.map((item) => (
           <button
             key={item.key}
@@ -79,7 +79,7 @@ export const Tabs: React.FC<TabsProps> = ({
             {item.icon && <span className="shrink-0">{item.icon}</span>}
             <span>{item.label}</span>
             {item.badge !== undefined && item.badge > 0 && (
-              <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-slate-200 text-slate-600 rounded-full">
+              <span className="ml-1 px-1.5 py-0.5 text-[10px] font-semibold bg-ink-200 text-muted rounded-full">
                 {item.badge > 99 ? '99+' : item.badge}
               </span>
             )}

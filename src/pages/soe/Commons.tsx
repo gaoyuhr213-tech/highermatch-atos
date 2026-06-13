@@ -32,7 +32,7 @@ export default function Commons() {
   const [completedTokens, setCompletedTokens] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState('all');
 
-  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载人才共享数据...</span></div>;
+  if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-brand-500" /><span className="ml-3 text-muted">加载人才共享数据...</span></div>;
   if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
 
   const talentCommons = commonsData?.items || [];
@@ -60,61 +60,61 @@ export default function Commons() {
     <div className="p-8 max-w-[1400px] mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">人才共享大厅</h1>
-          <p className="text-sm text-slate-500 mt-1">Talent Commons · 国企间人才柔性共享 · ScopedToken授权</p>
+          <h1 className="text-2xl font-bold text-foreground">人才共享大厅</h1>
+          <p className="text-sm text-muted mt-1">Talent Commons · 国企间人才柔性共享 · ScopedToken授权</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg">
+          <div className="flex items-center gap-1 p-1 bg-ink-100 rounded-lg">
             {[{ k: 'all', l: '全部' }, { k: 'verified', l: 'CA认证' }, { k: 'unverified', l: '待认证' }].map(f => (
-              <button key={f.k} onClick={() => setFilter(f.k)} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${filter === f.k ? 'bg-white text-primary-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>{f.l}</button>
+              <button key={f.k} onClick={() => setFilter(f.k)} className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${filter === f.k ? 'bg-surface text-brand-600 shadow-sm' : 'text-muted hover:text-foreground'}`}>{f.l}</button>
             ))}
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-primary-50 rounded-lg border border-primary-100">
-            <Key className="w-3.5 h-3.5 text-primary-600" />
-            <span className="text-xs text-primary-700 font-medium">已授权Token: {completedTokens.size}</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-brand-50 rounded-lg border border-brand-100">
+            <Key className="w-3.5 h-3.5 text-brand-600" />
+            <span className="text-xs text-brand-700 font-medium">已授权Token: {completedTokens.size}</span>
           </div>
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="stat-card"><p className="text-xs text-slate-500">共享池人才</p><p className="text-2xl font-bold text-slate-900">{talentCommons.length}</p></div>
-        <div className="stat-card"><p className="text-xs text-slate-500">CA认证率</p><p className="text-2xl font-bold text-trust-600">{talentCommons.length > 0 ? Math.round(talentCommons.filter(t => t.caVerified).length / talentCommons.length * 100) : 0}%</p></div>
-        <div className="stat-card"><p className="text-xs text-slate-500">活跃借调</p><p className="text-2xl font-bold text-primary-600">3</p></div>
-        <div className="stat-card"><p className="text-xs text-slate-500">本月新增</p><p className="text-2xl font-bold text-emerald-600">+2</p></div>
+        <div className="stat-card"><p className="text-xs text-muted">共享池人才</p><p className="text-2xl font-bold text-foreground">{talentCommons.length}</p></div>
+        <div className="stat-card"><p className="text-xs text-muted">CA认证率</p><p className="text-2xl font-bold text-trust-600">{talentCommons.length > 0 ? Math.round(talentCommons.filter(t => t.caVerified).length / talentCommons.length * 100) : 0}%</p></div>
+        <div className="stat-card"><p className="text-xs text-muted">活跃借调</p><p className="text-2xl font-bold text-brand-600">3</p></div>
+        <div className="stat-card"><p className="text-xs text-muted">本月新增</p><p className="text-2xl font-bold text-emerald-600">+2</p></div>
       </div>
 
       {/* Table */}
       <div className="glass-card overflow-hidden">
         <table className="w-full">
-          <thead><tr className="border-b border-slate-100 bg-slate-50/50">
-            <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-500">人才</th>
-            <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-500">当前单位</th>
-            <th className="text-left px-5 py-3.5 text-xs font-semibold text-slate-500">专业领域</th>
-            <th className="text-center px-5 py-3.5 text-xs font-semibold text-slate-500">共享类型</th>
-            <th className="text-center px-5 py-3.5 text-xs font-semibold text-slate-500">可用时间</th>
-            <th className="text-center px-5 py-3.5 text-xs font-semibold text-slate-500">CA认证</th>
-            <th className="text-center px-5 py-3.5 text-xs font-semibold text-slate-500">授权状态</th>
-            <th className="text-center px-5 py-3.5 text-xs font-semibold text-slate-500">操作</th>
+          <thead><tr className="border-b border-border bg-ink-50/50">
+            <th className="text-left px-5 py-3.5 text-xs font-semibold text-muted">人才</th>
+            <th className="text-left px-5 py-3.5 text-xs font-semibold text-muted">当前单位</th>
+            <th className="text-left px-5 py-3.5 text-xs font-semibold text-muted">专业领域</th>
+            <th className="text-center px-5 py-3.5 text-xs font-semibold text-muted">共享类型</th>
+            <th className="text-center px-5 py-3.5 text-xs font-semibold text-muted">可用时间</th>
+            <th className="text-center px-5 py-3.5 text-xs font-semibold text-muted">CA认证</th>
+            <th className="text-center px-5 py-3.5 text-xs font-semibold text-muted">授权状态</th>
+            <th className="text-center px-5 py-3.5 text-xs font-semibold text-muted">操作</th>
           </tr></thead>
           <tbody>
             {filtered.map(t => (
-              <tr key={t.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                <td className="px-5 py-3.5"><div className="flex items-center gap-3"><div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">{t.name[0]}</div><span className="text-sm font-medium text-slate-800">{t.name}</span></div></td>
-                <td className="px-5 py-3.5"><div className="flex items-center gap-2"><Building2 className="w-3.5 h-3.5 text-slate-400" /><span className="text-sm text-slate-600">{t.organization}</span></div></td>
+              <tr key={t.id} className="border-b border-border hover:bg-ink-50/50 transition-colors">
+                <td className="px-5 py-3.5"><div className="flex items-center gap-3"><div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-xs font-bold">{t.name[0]}</div><span className="text-sm font-medium text-foreground">{t.name}</span></div></td>
+                <td className="px-5 py-3.5"><div className="flex items-center gap-2"><Building2 className="w-3.5 h-3.5 text-muted" /><span className="text-sm text-muted">{t.organization}</span></div></td>
                 <td className="px-5 py-3.5"><div className="flex gap-1.5">{t.domains.map(d => <span key={d} className="badge badge-blue text-[10px]">{d}</span>)}</div></td>
                 <td className="px-5 py-3.5 text-center"><span className="badge badge-yellow">{t.shareType}</span></td>
-                <td className="px-5 py-3.5 text-center text-xs text-slate-600">{t.availableFrom}</td>
-                <td className="px-5 py-3.5 text-center">{t.caVerified ? <Shield className="w-4 h-4 text-trust-500 mx-auto" /> : <span className="text-[10px] text-slate-400">待认证</span>}</td>
+                <td className="px-5 py-3.5 text-center text-xs text-muted">{t.availableFrom}</td>
+                <td className="px-5 py-3.5 text-center">{t.caVerified ? <Shield className="w-4 h-4 text-trust-500 mx-auto" /> : <span className="text-[10px] text-muted">待认证</span>}</td>
                 <td className="px-5 py-3.5 text-center">
                   {completedTokens.has(t.id) ? (
                     <div className="flex items-center justify-center gap-1"><Unlock className="w-3.5 h-3.5 text-emerald-500" /><span className="text-[10px] text-emerald-600 font-medium">已授权</span></div>
                   ) : (
-                    <div className="flex items-center justify-center gap-1"><Lock className="w-3.5 h-3.5 text-slate-300" /><span className="text-[10px] text-slate-400">未授权</span></div>
+                    <div className="flex items-center justify-center gap-1"><Lock className="w-3.5 h-3.5 text-muted" /><span className="text-[10px] text-muted">未授权</span></div>
                   )}
                 </td>
                 <td className="px-5 py-3.5 text-center">
-                  <button onClick={() => handleStartAuth(t)} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${completedTokens.has(t.id) ? 'bg-slate-100 text-slate-500 hover:bg-slate-200' : 'bg-primary-50 text-primary-600 hover:bg-primary-100'}`}>
+                  <button onClick={() => handleStartAuth(t)} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-colors ${completedTokens.has(t.id) ? 'bg-ink-100 text-muted hover:bg-ink-200' : 'bg-brand-50 text-brand-600 hover:bg-brand-100'}`}>
                     {completedTokens.has(t.id) ? '查看Token' : '申请授权'}
                   </button>
                 </td>
@@ -127,23 +127,23 @@ export default function Commons() {
       {/* ScopedToken Authorization Modal */}
       {authModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-8" onClick={() => setAuthModal(null)}>
-          <div className="bg-white rounded-2xl shadow-elevated w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
+          <div className="bg-surface rounded-2xl shadow-elevated w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-6 border-b border-slate-100">
+            <div className="flex items-center justify-between p-6 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center">
                   <Key className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900">ScopedToken 授权</h2>
-                  <p className="text-xs text-slate-500">为 {authModal.talentName} 配置最小权限访问令牌</p>
+                  <h2 className="text-lg font-bold text-foreground">ScopedToken 授权</h2>
+                  <p className="text-xs text-muted">为 {authModal.talentName} 配置最小权限访问令牌</p>
                 </div>
               </div>
               <button onClick={() => setAuthModal(null)} className="btn-ghost p-2"><X className="w-5 h-5" /></button>
             </div>
 
             {/* Step Indicator */}
-            <div className="px-6 py-4 bg-slate-50/80 border-b border-slate-100">
+            <div className="px-6 py-4 bg-ink-50/80 border-b border-border">
               <div className="flex items-center gap-2">
                 {(['select', 'scope', 'sign', 'complete'] as AuthStep[]).map((step, i) => {
                   const labels = ['选择权限', '确认范围', 'U盾签名', '授权完成'];
@@ -151,11 +151,11 @@ export default function Commons() {
                   const isPast = ['select', 'scope', 'sign', 'complete'].indexOf(authStep) > i;
                   return (
                     <div key={step} className="flex items-center gap-2 flex-1">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${isPast ? 'bg-emerald-500 text-white' : isCurrent ? 'bg-primary-500 text-white' : 'bg-slate-200 text-slate-500'}`}>
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${isPast ? 'bg-emerald-500 text-white' : isCurrent ? 'bg-brand-500 text-white' : 'bg-ink-200 text-muted'}`}>
                         {isPast ? '✓' : i + 1}
                       </div>
-                      <span className={`text-xs ${isCurrent ? 'text-primary-700 font-medium' : 'text-slate-500'}`}>{labels[i]}</span>
-                      {i < 3 && <div className={`flex-1 h-px ${isPast ? 'bg-emerald-300' : 'bg-slate-200'}`} />}
+                      <span className={`text-xs ${isCurrent ? 'text-brand-700 font-medium' : 'text-muted'}`}>{labels[i]}</span>
+                      {i < 3 && <div className={`flex-1 h-px ${isPast ? 'bg-emerald-300' : 'bg-ink-200'}`} />}
                     </div>
                   );
                 })}
@@ -166,31 +166,31 @@ export default function Commons() {
             <div className="flex-1 overflow-y-auto p-6">
               {authStep === 'select' && (
                 <div className="space-y-4">
-                  <p className="text-sm text-slate-700 font-medium">选择需要授权的数据访问范围：</p>
+                  <p className="text-sm text-foreground font-medium">选择需要授权的数据访问范围：</p>
                   <div className="space-y-2">
                     {availableScopes.map(scope => (
-                      <label key={scope.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${selectedScopes.includes(scope.id) ? 'border-primary-200 bg-primary-50/50' : 'border-slate-100 hover:border-slate-200'}`}>
-                        <input type="checkbox" checked={selectedScopes.includes(scope.id)} onChange={() => setSelectedScopes(prev => prev.includes(scope.id) ? prev.filter(s => s !== scope.id) : [...prev, scope.id])} className="w-4 h-4 rounded border-slate-300 text-primary-600" />
+                      <label key={scope.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${selectedScopes.includes(scope.id) ? 'border-brand-200 bg-brand-50/50' : 'border-border hover:border-border'}`}>
+                        <input type="checkbox" checked={selectedScopes.includes(scope.id)} onChange={() => setSelectedScopes(prev => prev.includes(scope.id) ? prev.filter(s => s !== scope.id) : [...prev, scope.id])} className="w-4 h-4 rounded border-ink-300 text-brand-600" />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-slate-800">{scope.label}</span>
+                            <span className="text-sm font-medium text-foreground">{scope.label}</span>
                             <span className={`text-[10px] px-1.5 py-0.5 rounded ${scope.risk === 'high' ? 'bg-red-50 text-red-600' : scope.risk === 'medium' ? 'bg-amber-50 text-amber-600' : 'bg-emerald-50 text-emerald-600'}`}>{scope.risk === 'high' ? '高敏感' : scope.risk === 'medium' ? '中敏感' : '低敏感'}</span>
                           </div>
-                          <p className="text-xs text-slate-500 mt-0.5">{scope.desc}</p>
+                          <p className="text-xs text-muted mt-0.5">{scope.desc}</p>
                         </div>
                       </label>
                     ))}
                   </div>
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <div>
-                      <label className="text-xs font-medium text-slate-600 block mb-1.5">有效期</label>
-                      <select value={duration} onChange={e => setDuration(e.target.value)} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-700 bg-white">
+                      <label className="text-xs font-medium text-muted block mb-1.5">有效期</label>
+                      <select value={duration} onChange={e => setDuration(e.target.value)} className="w-full px-3 py-2 border border-border rounded-lg text-sm text-foreground bg-surface">
                         <option value="7">7天</option><option value="30">30天</option><option value="90">90天</option><option value="180">180天</option>
                       </select>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-slate-600 block mb-1.5">用途说明</label>
-                      <input type="text" value={purpose} onChange={e => setPurpose(e.target.value)} placeholder="如：项目借调评估" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-700 placeholder:text-slate-400" />
+                      <label className="text-xs font-medium text-muted block mb-1.5">用途说明</label>
+                      <input type="text" value={purpose} onChange={e => setPurpose(e.target.value)} placeholder="如：项目借调评估" className="w-full px-3 py-2 border border-border rounded-lg text-sm text-foreground placeholder:text-muted" />
                     </div>
                   </div>
                 </div>
@@ -198,13 +198,13 @@ export default function Commons() {
 
               {authStep === 'scope' && (
                 <div className="space-y-4">
-                  <p className="text-sm text-slate-700 font-medium">请确认以下授权范围：</p>
-                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <div className="flex items-center justify-between"><span className="text-xs text-slate-500">目标人才</span><span className="text-sm font-medium text-slate-800">{authModal.talentName}</span></div>
-                    <div className="flex items-center justify-between"><span className="text-xs text-slate-500">有效期</span><span className="text-sm font-medium text-slate-800">{duration}天</span></div>
-                    <div className="flex items-center justify-between"><span className="text-xs text-slate-500">用途</span><span className="text-sm font-medium text-slate-800">{purpose || '未填写'}</span></div>
-                    <div className="border-t border-slate-200 pt-3">
-                      <p className="text-xs text-slate-500 mb-2">授权范围 ({selectedScopes.length}项)</p>
+                  <p className="text-sm text-foreground font-medium">请确认以下授权范围：</p>
+                  <div className="p-4 bg-ink-50 rounded-xl border border-border space-y-3">
+                    <div className="flex items-center justify-between"><span className="text-xs text-muted">目标人才</span><span className="text-sm font-medium text-foreground">{authModal.talentName}</span></div>
+                    <div className="flex items-center justify-between"><span className="text-xs text-muted">有效期</span><span className="text-sm font-medium text-foreground">{duration}天</span></div>
+                    <div className="flex items-center justify-between"><span className="text-xs text-muted">用途</span><span className="text-sm font-medium text-foreground">{purpose || '未填写'}</span></div>
+                    <div className="border-t border-border pt-3">
+                      <p className="text-xs text-muted mb-2">授权范围 ({selectedScopes.length}项)</p>
                       <div className="flex flex-wrap gap-1.5">
                         {selectedScopes.map(s => {
                           const scope = availableScopes.find(as => as.id === s);
@@ -226,25 +226,25 @@ export default function Commons() {
                 <div className="flex flex-col items-center justify-center py-8 space-y-6">
                   {signing ? (
                     <>
-                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-100 to-trust-100 flex items-center justify-center animate-pulse">
-                        <Shield className="w-10 h-10 text-primary-600" />
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand-100 to-trust-100 flex items-center justify-center animate-pulse">
+                        <Shield className="w-10 h-10 text-brand-600" />
                       </div>
                       <div className="text-center">
-                        <p className="text-sm font-medium text-slate-800">正在进行U盾SM2数字签名...</p>
-                        <p className="text-xs text-slate-500 mt-1">请确保U盾已插入并保持连接</p>
+                        <p className="text-sm font-medium text-foreground">正在进行U盾SM2数字签名...</p>
+                        <p className="text-xs text-muted mt-1">请确保U盾已插入并保持连接</p>
                       </div>
-                      <div className="w-64 h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-primary-500 to-trust-500 rounded-full animate-pulse" style={{ width: '70%' }} />
+                      <div className="w-64 h-2 bg-ink-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-brand-500 to-trust-500 rounded-full animate-pulse" style={{ width: '70%' }} />
                       </div>
                     </>
                   ) : (
                     <>
-                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                        <Key className="w-10 h-10 text-slate-400" />
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-ink-100 to-ink-200 flex items-center justify-center">
+                        <Key className="w-10 h-10 text-muted" />
                       </div>
                       <div className="text-center">
-                        <p className="text-sm font-medium text-slate-800">准备签名</p>
-                        <p className="text-xs text-slate-500 mt-1">点击下方按钮使用U盾对ScopedToken进行SM2签名</p>
+                        <p className="text-sm font-medium text-foreground">准备签名</p>
+                        <p className="text-xs text-muted mt-1">点击下方按钮使用U盾对ScopedToken进行SM2签名</p>
                       </div>
                     </>
                   )}
@@ -257,24 +257,24 @@ export default function Commons() {
                     <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                   </div>
                   <div className="text-center">
-                    <p className="text-lg font-bold text-slate-900">授权成功</p>
-                    <p className="text-sm text-slate-500 mt-1">ScopedToken 已生成并经CA签名存证</p>
+                    <p className="text-lg font-bold text-foreground">授权成功</p>
+                    <p className="text-sm text-muted mt-1">ScopedToken 已生成并经CA签名存证</p>
                   </div>
-                  <div className="w-full max-w-md p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                    <div className="flex items-center justify-between"><span className="text-xs text-slate-500">Token ID</span><span className="text-xs font-mono text-slate-700">SCT-{Date.now().toString(36).toUpperCase()}</span></div>
-                    <div className="flex items-center justify-between"><span className="text-xs text-slate-500">SM2签名</span><span className="text-xs font-mono text-trust-600">SM2:9f3a...c7d2</span></div>
-                    <div className="flex items-center justify-between"><span className="text-xs text-slate-500">SM3存证</span><span className="text-xs font-mono text-trust-600">SM3:4b8e...a1f5</span></div>
-                    <div className="flex items-center justify-between"><span className="text-xs text-slate-500">有效期至</span><span className="text-xs text-slate-700">{new Date(Date.now() + parseInt(duration) * 86400000).toLocaleDateString()}</span></div>
+                  <div className="w-full max-w-md p-4 bg-ink-50 rounded-xl border border-border space-y-2">
+                    <div className="flex items-center justify-between"><span className="text-xs text-muted">Token ID</span><span className="text-xs font-mono text-foreground">SCT-{Date.now().toString(36).toUpperCase()}</span></div>
+                    <div className="flex items-center justify-between"><span className="text-xs text-muted">SM2签名</span><span className="text-xs font-mono text-trust-600">SM2:9f3a...c7d2</span></div>
+                    <div className="flex items-center justify-between"><span className="text-xs text-muted">SM3存证</span><span className="text-xs font-mono text-trust-600">SM3:4b8e...a1f5</span></div>
+                    <div className="flex items-center justify-between"><span className="text-xs text-muted">有效期至</span><span className="text-xs text-foreground">{new Date(Date.now() + parseInt(duration) * 86400000).toLocaleDateString()}</span></div>
                   </div>
                 </div>
               )}
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
+            <div className="p-4 border-t border-border bg-ink-50/50 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Shield className="w-4 h-4 text-trust-500" />
-                <span className="text-xs text-slate-500">最小权限原则 · U盾SM2签名 · 四川CA存证</span>
+                <span className="text-xs text-muted">最小权限原则 · U盾SM2签名 · 四川CA存证</span>
               </div>
               <div className="flex items-center gap-2">
                 {authStep !== 'complete' && <button onClick={() => setAuthModal(null)} className="btn-secondary text-xs">取消</button>}

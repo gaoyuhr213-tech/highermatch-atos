@@ -63,12 +63,12 @@ export const Modal: React.FC<ModalProps> = ({
       <div
         ref={overlayRef}
         onClick={() => closeOnOverlay && onClose()}
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-[fadeIn_150ms_ease-out]"
+        className="absolute inset-0 bg-ink-900/60 backdrop-blur-sm animate-[fadeIn_150ms_ease-out]"
       />
       {/* Panel */}
       <div
         className={[
-          'relative w-full mx-4 bg-white rounded-2xl shadow-elevated overflow-hidden',
+          'relative w-full mx-4 bg-surface rounded-2xl shadow-elevated overflow-hidden',
           'animate-[scaleIn_200ms_ease-out]',
           sizeStyles[size],
         ].join(' ')}
@@ -78,13 +78,13 @@ export const Modal: React.FC<ModalProps> = ({
         {(title || showClose) && (
           <div className="flex items-start justify-between px-6 pt-6 pb-2">
             <div>
-              {title && <h2 className="text-lg font-semibold text-slate-900">{title}</h2>}
-              {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+              {title && <h2 className="text-lg font-semibold text-foreground">{title}</h2>}
+              {description && <p className="mt-1 text-sm text-muted">{description}</p>}
             </div>
             {showClose && (
               <button
                 onClick={onClose}
-                className="p-1.5 -mr-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-1.5 -mr-1.5 text-muted hover:text-muted hover:bg-ink-100 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -97,7 +97,7 @@ export const Modal: React.FC<ModalProps> = ({
         <div className="px-6 py-4 overflow-y-auto max-h-[60vh]">{children}</div>
         {/* Footer */}
         {footer && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-25">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-border bg-ink-25">
             {footer}
           </div>
         )}

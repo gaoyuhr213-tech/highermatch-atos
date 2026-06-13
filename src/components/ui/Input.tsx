@@ -40,13 +40,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={`flex flex-col gap-1.5 ${fullWidth ? 'w-full' : ''}`}>
         {label && (
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-sm font-medium text-foreground">
             {label}
           </label>
         )}
         <div className="relative">
           {icon && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none">
               {icon}
             </span>
           )}
@@ -55,13 +55,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             type={inputType}
             disabled={disabled}
             className={[
-              'w-full border bg-white text-slate-900 placeholder:text-slate-400',
+              'w-full border bg-surface text-foreground placeholder:text-muted',
               'transition-all duration-150 ease-out',
-              'focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500',
-              'disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-slate-50',
+              'focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500',
+              'disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-ink-50',
               error
                 ? 'border-error-500 focus:ring-error-500/20 focus:border-error-500'
-                : 'border-slate-200 hover:border-slate-300',
+                : 'border-border hover:border-ink-300',
               sizeStyles[size],
               icon ? 'pl-10' : '',
               iconRight || isPassword ? 'pr-10' : '',
@@ -74,7 +74,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               type="button"
               tabIndex={-1}
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted transition-colors"
             >
               {showPassword ? (
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -89,13 +89,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             </button>
           )}
           {!isPassword && iconRight && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted">
               {iconRight}
             </span>
           )}
         </div>
         {error && <p className="text-xs text-error-500">{error}</p>}
-        {!error && hint && <p className="text-xs text-slate-400">{hint}</p>}
+        {!error && hint && <p className="text-xs text-muted">{hint}</p>}
       </div>
     );
   }

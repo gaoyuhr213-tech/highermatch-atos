@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import './styles/tokens.css';
 
 @tailwind base;
 @tailwind components;
@@ -11,11 +12,36 @@
   }
   body {
     @apply bg-slate-25 text-slate-900 font-sans;
+    font-family: var(--font-sans);
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     margin: 0;
   }
   ::selection {
     @apply bg-primary-100 text-primary-900;
+  }
+  /* PRD: tabular-nums 全局数字格式 */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  /* PRD: mono 文本（哈希/序列号/签名/版本号） */
+  .font-hash {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  /* PRD: focus ring */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+  /* PRD: reduced-motion 全局降级 */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 

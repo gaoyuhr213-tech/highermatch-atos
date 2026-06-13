@@ -96,45 +96,45 @@ export const Select: React.FC<SelectProps> = ({
 
   return (
     <div ref={containerRef} className={`relative flex flex-col gap-1.5 ${fullWidth ? 'w-full' : ''}`}>
-      {label && <label className="text-sm font-medium text-slate-700">{label}</label>}
+      {label && <label className="text-sm font-medium text-foreground">{label}</label>}
       <button
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setOpen(!open)}
         className={[
-          'flex items-center justify-between border bg-white text-left rounded-lg',
+          'flex items-center justify-between border bg-surface text-left rounded-lg',
           'transition-all duration-150 ease-out',
-          'focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500',
+          'focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500',
           'disabled:opacity-50 disabled:cursor-not-allowed',
-          error ? 'border-error-500' : open ? 'border-primary-500 ring-2 ring-primary-500/20' : 'border-slate-200 hover:border-slate-300',
+          error ? 'border-error-500' : open ? 'border-brand-500 ring-2 ring-brand-500/20' : 'border-border hover:border-ink-300',
           sizeStyles[size],
           className,
         ].join(' ')}
       >
-        <span className={displayLabel ? 'text-slate-900 truncate' : 'text-slate-400 truncate'}>
+        <span className={displayLabel ? 'text-foreground truncate' : 'text-muted truncate'}>
           {displayLabel || placeholder}
         </span>
-        <svg className={`w-4 h-4 text-slate-400 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className={`w-4 h-4 text-muted shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
       {open && (
-        <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-elevated max-h-60 overflow-auto">
+        <div className="absolute z-50 top-full left-0 right-0 mt-1 bg-surface border border-border rounded-xl shadow-elevated max-h-60 overflow-auto">
           {searchable && (
-            <div className="p-2 border-b border-slate-100">
+            <div className="p-2 border-b border-border">
               <input
                 autoFocus
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="搜索..."
-                className="w-full h-8 px-3 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                className="w-full h-8 px-3 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
               />
             </div>
           )}
           <div className="p-1">
             {filteredOptions.length === 0 ? (
-              <div className="px-3 py-2 text-sm text-slate-400 text-center">无匹配结果</div>
+              <div className="px-3 py-2 text-sm text-muted text-center">无匹配结果</div>
             ) : (
               filteredOptions.map((opt) => {
                 const isSelected = selectedValues.includes(opt.value);
@@ -147,11 +147,11 @@ export const Select: React.FC<SelectProps> = ({
                     className={[
                       'w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg text-left transition-colors',
                       'disabled:opacity-40 disabled:cursor-not-allowed',
-                      isSelected ? 'bg-primary-50 text-primary-700 font-medium' : 'text-slate-700 hover:bg-slate-50',
+                      isSelected ? 'bg-brand-50 text-brand-700 font-medium' : 'text-foreground hover:bg-ink-50',
                     ].join(' ')}
                   >
                     {multiple && (
-                      <span className={`w-4 h-4 border rounded flex items-center justify-center shrink-0 ${isSelected ? 'bg-primary-500 border-primary-500' : 'border-slate-300'}`}>
+                      <span className={`w-4 h-4 border rounded flex items-center justify-center shrink-0 ${isSelected ? 'bg-brand-500 border-brand-500' : 'border-ink-300'}`}>
                         {isSelected && (
                           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -162,7 +162,7 @@ export const Select: React.FC<SelectProps> = ({
                     {opt.icon && <span className="shrink-0">{opt.icon}</span>}
                     <span className="truncate">{opt.label}</span>
                     {!multiple && isSelected && (
-                      <svg className="w-4 h-4 text-primary-500 ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-4 h-4 text-brand-500 ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     )}

@@ -1,0 +1,141 @@
+/**
+ * 蓉才通™ Design Tokens
+ * 对标PRD §3 Design System
+ * 品牌色 · 中性色 · 语义色 · 证书印章色 · 字体 · 字阶 · 间距 · 圆角 · 阴影 · 焦点 · Motion
+ */
+
+:root {
+  /* ─── Brand / AI蓝 ─────────────────────────────── */
+  --brand-50: #EEF4FF;
+  --brand-100: #D9E5FF;
+  --brand-200: #BCD0FF;
+  --brand-300: #8FB1FF;
+  --brand-400: #5E8BFB;
+  --brand-500: #3B6FF2;
+  --brand-600: #2563EB;
+  --brand-700: #1D4FD0;
+  --brand-800: #1E45A8;
+  --brand-900: #1E3A82;
+  --brand-950: #172554;
+
+  /* ─── Ink / 冷中性 ─────────────────────────────── */
+  --ink-0: #FFFFFF;
+  --ink-50: #F8FAFC;
+  --ink-100: #F1F4F8;
+  --ink-200: #E3E8EF;
+  --ink-300: #CDD5E0;
+  --ink-400: #9AA6B8;
+  --ink-500: #697586;
+  --ink-600: #4B5565;
+  --ink-700: #364152;
+  --ink-800: #202939;
+  --ink-900: #121926;
+  --ink-950: #0B0F1A;
+
+  /* ─── 语义色 ─────────────────────────────────── */
+  --trust: #059669;
+  --trust-bg: #ECFDF5;
+  --trust-border: #A7F3D0;
+  --risk: #DC2626;
+  --risk-bg: #FEF2F2;
+  --risk-border: #FECACA;
+  --warn: #D97706;
+  --warn-bg: #FFFBEB;
+  --warn-border: #FDE68A;
+
+  /* ─── 证书印章色 ─────────────────────────────── */
+  --seal-ev: #047857;          /* EV 金属渐变边 */
+  --seal-ev-gradient: linear-gradient(135deg, #059669, #047857, #065F46);
+  --seal-ov: #2563EB;          /* OV 蓝 */
+  --seal-dv: #697586;          /* DV 灰 */
+
+  /* ─── 字体 ─────────────────────────────────── */
+  --font-sans: 'Inter', 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+
+  /* ─── 字阶 ─────────────────────────────────── */
+  --text-h1: 30px;
+  --text-h1-weight: 600;
+  --text-h2: 24px;
+  --text-h2-weight: 600;
+  --text-h3: 20px;
+  --text-h3-weight: 600;
+  --text-body: 14px;
+  --text-body-weight: 400;
+  --text-label: 13px;
+  --text-label-weight: 500;
+  --text-caption: 12px;
+  --text-overline: 11px;
+  --text-overline-weight: 600;
+  --text-mono: 13px;
+
+  /* ─── 间距 (4px基) ─────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ─── 圆角 ─────────────────────────────────── */
+  --radius-button: 10px;
+  --radius-input: 10px;
+  --radius-card: 16px;
+  --radius-full: 999px;
+
+  /* ─── 阴影 ─────────────────────────────────── */
+  --shadow-hairline: 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --shadow-e2: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-e3: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-e4: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+
+  /* ─── 焦点 ─────────────────────────────────── */
+  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.18);
+
+  /* ─── Motion ─────────────────────────────────── */
+  --duration-fast: 140ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --duration-ceremony: 800ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ─── 密度 ─────────────────────────────────── */
+  --row-height-comfortable: 44px;
+  --row-height-compact: 36px;
+
+  /* ─── 布局 ─────────────────────────────────── */
+  --sidebar-width: 264px;
+  --sidebar-collapsed: 64px;
+  --topbar-height: 56px;
+}
+
+/* ─── reduced-motion ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --duration-ceremony: 0ms;
+  }
+}
+
+/* ─── 暗色主题（入场/验真仪式） ─────────────── */
+[data-theme="dark"] {
+  --ink-0: #0B0F1A;
+  --ink-50: #121926;
+  --ink-100: #202939;
+  --ink-200: #364152;
+  --ink-300: #4B5565;
+  --ink-400: #697586;
+  --ink-500: #9AA6B8;
+  --ink-600: #CDD5E0;
+  --ink-700: #E3E8EF;
+  --ink-800: #F1F4F8;
+  --ink-900: #F8FAFC;
+  --ink-950: #FFFFFF;
+}

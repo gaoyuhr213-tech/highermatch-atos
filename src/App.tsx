@@ -1,15 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useReducer, lazy, Suspense } from 'react';
+import { useReducer, lazy, Suspense, useState, useEffect } from 'react';
 import { AppContext, appReducer, initialState, useAppContext } from './store';
 import type { Role } from './store';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { LoadingView } from './components/StateViews';
 import { QueryProvider } from './lib/api/provider';
 import { AuthProvider } from './lib/auth';
+import { TrustedSessionProvider } from './lib/trust/TrustedSessionProvider';
+import { useTrustedSession } from './lib/trust/session';
 import DashboardLayout from './layouts/DashboardLayout';
 
 // ─── 路由级 Code Split（React.lazy） ─────────────────────
-const UShieldLogin = lazy(() => import('./pages/UShieldLogin'));
+const CertAssistant = lazy(() => import('./pages/CertAssistant'));
+const EndorsementVerify = lazy(() => import('./pages/public/EndorsementVerify'));
 const CommandCenter = lazy(() => import('./pages/b/CommandCenter'));
 const Pipeline = lazy(() => import('./pages/b/Pipeline'));
 const Graph = lazy(() => import('./pages/b/Graph'));
@@ -28,6 +31,7 @@ const Rewards = lazy(() => import('./pages/expert/Rewards'));
 const Succession = lazy(() => import('./pages/soe/Succession'));
 const Commons = lazy(() => import('./pages/soe/Commons'));
 const DecisionLineage = lazy(() => import('./pages/DecisionLineage'));
+import { CommandPalette } from './components/CommandPalette';
 
 // ─── 兼容旧API（供子组件过渡期使用） ────────────────────
 export type { Role } from './store';
@@ -50,53 +54,105 @@ export const useApp = () => {
   };
 };
 
-export default function App() {
+/**
+ * 内部路由容器
+ * 根据TrustedSession状态决定展示入场流还是Dashboard
+ */
+function AppRoutes() {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const { isAuthenticated: isTrusted } = useTrustedSession();
+  const [cmdOpen, setCmdOpen] = useState(false);
 
+  // ⌘K / Ctrl+K 全局快捷键
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setCmdOpen(o => !o); }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
+  // 入场流完成后同步到旧状态管理（兼容）
+  // 当TrustedSession有身份但旧state未认证时，自动同步
+  if (isTrusted && !state.authenticated) {
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: {
+        role: 'employer' as Role,
+        tenantId: 'demo',
+        enterpriseName: '蓉才通演示',
+        certSerial: 'SCCA-DEMO-001',
+        certLevel: 'EV',
+        scopedToken: 'demo-token',
+      },
+    });
+  }
+
+  return (
+    <AppContext.Provider value={{ state, dispatch }}>
+      <BrowserRouter>
+        <Suspense fallback={<LoadingView text="正在加载页面..." />}>
+          <Routes>
+            {/* 公开路由（无需认证） */}
+            <Route path="/e/:slug" element={<EndorsementVerify />} />
+
+            {/* 入场流 or Dashboard */}
+            <Route path="/*" element={
+              !state.authenticated ? (
+                <CertAssistant key="cert-assistant" />
+              ) : (
+                <DashboardLayout key="dashboard">
+                  <Routes>
+                    {/* B端 */}
+                    <Route path="/b/command" element={<CommandCenter />} />
+                    <Route path="/b/pipeline" element={<Pipeline />} />
+                    <Route path="/b/graph" element={<Graph />} />
+                    <Route path="/b/sourcing" element={<Sourcing />} />
+                    <Route path="/b/interview" element={<Interview />} />
+                    <Route path="/b/job-qa" element={<JobQA />} />
+                    <Route path="/b/community" element={<Community />} />
+                    <Route path="/b/efficiency" element={<EfficiencyDashboard />} />
+                    <Route path="/b/audit" element={<AuditLog />} />
+                    {/* C端 */}
+                    <Route path="/c/coach" element={<Coach />} />
+                    <Route path="/c/apply" element={<Apply />} />
+                    <Route path="/c/endorsement" element={<Endorsement />} />
+                    <Route path="/c/decision-hub" element={<DecisionHub />} />
+                    {/* 专家端 */}
+                    <Route path="/expert/reviews" element={<Reviews />} />
+                    <Route path="/expert/rewards" element={<Rewards />} />
+                    {/* 国企端 */}
+                    <Route path="/soe/succession" element={<Succession />} />
+                    <Route path="/soe/commons" element={<Commons />} />
+                    {/* 默认重定向 */}
+                    <Route path="*" element={<Navigate to="/b/command" replace />} />
+                  </Routes>
+                  {state.showLineage && (
+                    <DecisionLineage onClose={() => dispatch({ type: 'CLOSE_LINEAGE' })} decisionId={state.lineageTarget || 'default'} />
+                  )}
+                  <CommandPalette
+                    open={cmdOpen}
+                    onClose={() => setCmdOpen(false)}
+                    onLineage={() => dispatch({ type: 'OPEN_LINEAGE', payload: '' })}
+                  />
+                </DashboardLayout>
+              )
+            } />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </AppContext.Provider>
+  );
+}
+
+export default function App() {
   return (
     <ErrorBoundary>
       <QueryProvider>
         <AuthProvider>
-          <AppContext.Provider value={{ state, dispatch }}>
-            <BrowserRouter>
-              <Suspense fallback={<LoadingView text="正在加载页面..." />}>
-                {!state.authenticated ? (
-                  <UShieldLogin key="login" />
-                ) : (
-                  <DashboardLayout key="dashboard">
-                    <Routes>
-                      {/* B端 */}
-                      <Route path="/b/command" element={<CommandCenter />} />
-                      <Route path="/b/pipeline" element={<Pipeline />} />
-                      <Route path="/b/graph" element={<Graph />} />
-                      <Route path="/b/sourcing" element={<Sourcing />} />
-                      <Route path="/b/interview" element={<Interview />} />
-                      <Route path="/b/job-qa" element={<JobQA />} />
-                      <Route path="/b/community" element={<Community />} />
-                      <Route path="/b/efficiency" element={<EfficiencyDashboard />} />
-                      <Route path="/b/audit" element={<AuditLog />} />
-                      {/* C端 */}
-                      <Route path="/c/coach" element={<Coach />} />
-                      <Route path="/c/apply" element={<Apply />} />
-                      <Route path="/c/endorsement" element={<Endorsement />} />
-                      <Route path="/c/decision-hub" element={<DecisionHub />} />
-                      {/* 专家端 */}
-                      <Route path="/expert/reviews" element={<Reviews />} />
-                      <Route path="/expert/rewards" element={<Rewards />} />
-                      {/* 国企端 */}
-                      <Route path="/soe/succession" element={<Succession />} />
-                      <Route path="/soe/commons" element={<Commons />} />
-                      {/* 默认重定向 */}
-                      <Route path="*" element={<Navigate to="/b/command" replace />} />
-                    </Routes>
-                    {state.showLineage && (
-                      <DecisionLineage onClose={() => dispatch({ type: 'CLOSE_LINEAGE' })} decisionId={state.lineageTarget || 'default'} />
-                    )}
-                  </DashboardLayout>
-                )}
-              </Suspense>
-            </BrowserRouter>
-          </AppContext.Provider>
+          <TrustedSessionProvider>
+            <AppRoutes />
+          </TrustedSessionProvider>
         </AuthProvider>
       </QueryProvider>
     </ErrorBoundary>

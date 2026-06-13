@@ -21,7 +21,7 @@ const sizeStyles: Record<AvatarSize, string> = {
 
 const statusColors = {
   online: 'bg-success-500',
-  offline: 'bg-slate-300',
+  offline: 'bg-ink-300',
   busy: 'bg-error-500',
   away: 'bg-warning-500',
 };
@@ -35,7 +35,7 @@ const statusSizes: Record<AvatarSize, string> = {
 };
 
 const bgColors = [
-  'bg-primary-100 text-primary-700',
+  'bg-brand-100 text-brand-700',
   'bg-emerald-100 text-emerald-700',
   'bg-amber-100 text-amber-700',
   'bg-rose-100 text-rose-700',
@@ -68,7 +68,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   const [imgError, setImgError] = useState(false);
   const showImage = src && !imgError;
   const initials = name ? getInitials(name) : '?';
-  const colorClass = name ? bgColors[getColorIndex(name)] : 'bg-slate-200 text-slate-500';
+  const colorClass = name ? bgColors[getColorIndex(name)] : 'bg-ink-200 text-muted';
 
   return (
     <div className={`relative inline-flex shrink-0 ${className}`}>

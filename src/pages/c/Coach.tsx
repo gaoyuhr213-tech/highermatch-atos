@@ -65,7 +65,7 @@ export default function Coach() {
   return (
     <div className="p-8 h-full flex flex-col max-w-[900px] mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <div><h1 className="text-2xl font-bold text-slate-900">AI 职业教练</h1><p className="text-sm text-slate-500 mt-1">Career Coach · STAR重写 / 模拟面试 / 薪资策略</p></div>
+        <div><h1 className="text-2xl font-bold text-foreground">AI 职业教练</h1><p className="text-sm text-muted mt-1">Career Coach · STAR重写 / 模拟面试 / 薪资策略</p></div>
         <div className="flex items-center gap-2">
           <button onClick={resetChat} className="btn-ghost"><RotateCcw className="w-4 h-4" />重置</button>
           <button onClick={() => mode === 'coach' ? startSimulation() : setMode('coach')} className={`${mode === 'simulate' ? 'btn-primary' : 'btn-secondary'}`}>
@@ -75,30 +75,30 @@ export default function Coach() {
       </div>
 
       {mode === 'simulate' && (
-        <div className="mb-4 p-3 bg-primary-50 rounded-xl border border-primary-100 flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-          <span className="text-xs text-primary-700 font-medium">模拟面试进行中 · 第 {simIndex + 1}/{simulateQuestions.length} 题</span>
+        <div className="mb-4 p-3 bg-brand-50 rounded-xl border border-brand-100 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
+          <span className="text-xs text-brand-700 font-medium">模拟面试进行中 · 第 {simIndex + 1}/{simulateQuestions.length} 题</span>
         </div>
       )}
 
       <div ref={scrollRef} className="flex-1 glass-card p-6 overflow-y-auto mb-4 space-y-4">
         {messages.map((msg, i) => (
           <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === 'ai' ? 'bg-primary-100 text-primary-600' : 'bg-slate-200 text-slate-600'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === 'ai' ? 'bg-brand-100 text-brand-600' : 'bg-ink-200 text-muted'}`}>
               {msg.role === 'ai' ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
             </div>
-            <div className={`max-w-[75%] p-4 rounded-2xl ${msg.role === 'ai' ? 'bg-slate-50 border border-slate-100' : 'bg-primary-500 text-white'}`}>
-              <div className={`text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'text-white' : 'text-slate-700'}`}
+            <div className={`max-w-[75%] p-4 rounded-2xl ${msg.role === 'ai' ? 'bg-ink-50 border border-border' : 'bg-brand-500 text-white'}`}>
+              <div className={`text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'user' ? 'text-white' : 'text-foreground'}`}
                 dangerouslySetInnerHTML={{ __html: msg.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-              <p className={`text-[10px] mt-2 ${msg.role === 'user' ? 'text-primary-200' : 'text-slate-400'}`}>{msg.timestamp}</p>
+              <p className={`text-[10px] mt-2 ${msg.role === 'user' ? 'text-brand-200' : 'text-muted'}`}>{msg.timestamp}</p>
             </div>
           </div>
         ))}
         {isTyping && (
           <div className="flex gap-3">
-            <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center"><Bot className="w-4 h-4" /></div>
-            <div className="bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3">
-              <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-slate-300 animate-bounce" /><div className="w-2 h-2 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '0.1s' }} /><div className="w-2 h-2 rounded-full bg-slate-300 animate-bounce" style={{ animationDelay: '0.2s' }} /></div>
+            <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center"><Bot className="w-4 h-4" /></div>
+            <div className="bg-ink-50 border border-border rounded-2xl px-4 py-3">
+              <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-ink-300 animate-bounce" /><div className="w-2 h-2 rounded-full bg-ink-300 animate-bounce" style={{ animationDelay: '0.1s' }} /><div className="w-2 h-2 rounded-full bg-ink-300 animate-bounce" style={{ animationDelay: '0.2s' }} /></div>
             </div>
           </div>
         )}
@@ -106,16 +106,16 @@ export default function Coach() {
 
       <div className="glass-card p-4">
         <div className="flex items-center gap-3">
-          <Sparkles className="w-5 h-5 text-primary-400" />
+          <Sparkles className="w-5 h-5 text-brand-400" />
           <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && sendMessage()}
             placeholder={mode === 'simulate' ? '输入你的面试回答...' : '输入你的问题（如：帮我用STAR重写项目经历）...'}
             className="input-field flex-1" />
           <button onClick={sendMessage} disabled={!input.trim()} className="btn-primary disabled:opacity-50"><Send className="w-4 h-4" />发送</button>
         </div>
         <div className="flex items-center gap-3 mt-2 pl-8">
-          <button onClick={() => setInput('帮我用STAR框架重写项目经历')} className="text-[10px] text-primary-600 hover:underline flex items-center gap-1"><MessageSquare className="w-3 h-3" />STAR重写</button>
-          <button onClick={() => setInput('薪资谈判策略建议')} className="text-[10px] text-primary-600 hover:underline flex items-center gap-1"><MessageSquare className="w-3 h-3" />薪资谈判</button>
-          <button onClick={() => setInput('如何回答"你的缺点是什么"')} className="text-[10px] text-primary-600 hover:underline flex items-center gap-1"><MessageSquare className="w-3 h-3" />常见问题</button>
+          <button onClick={() => setInput('帮我用STAR框架重写项目经历')} className="text-[10px] text-brand-600 hover:underline flex items-center gap-1"><MessageSquare className="w-3 h-3" />STAR重写</button>
+          <button onClick={() => setInput('薪资谈判策略建议')} className="text-[10px] text-brand-600 hover:underline flex items-center gap-1"><MessageSquare className="w-3 h-3" />薪资谈判</button>
+          <button onClick={() => setInput('如何回答"你的缺点是什么"')} className="text-[10px] text-brand-600 hover:underline flex items-center gap-1"><MessageSquare className="w-3 h-3" />常见问题</button>
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ interface SkeletonProps {
   className?: string;
 }
 
-const baseClass = 'bg-slate-100 animate-pulse rounded';
+const baseClass = 'bg-ink-100 animate-pulse rounded';
 
 export const Skeleton: React.FC<SkeletonProps> = ({
   variant = 'text',
@@ -39,7 +39,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 
   if (variant === 'card') {
     return (
-      <div className={`border border-slate-200 rounded-xl p-5 space-y-4 ${className}`}>
+      <div className={`border border-border rounded-xl p-5 space-y-4 ${className}`}>
         <div className="flex items-center gap-3">
           <div className={`${baseClass} rounded-full w-10 h-10`} />
           <div className="flex-1 space-y-2">

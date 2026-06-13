@@ -14,11 +14,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 shadow-sm focus-visible:ring-primary-500/40',
+    'bg-brand-500 text-white hover:bg-brand-600 active:bg-brand-700 shadow-sm focus-visible:ring-brand-500/40',
   secondary:
-    'bg-slate-100 text-slate-700 hover:bg-slate-200 active:bg-slate-300 border border-slate-200 focus-visible:ring-slate-400/40',
+    'bg-ink-100 text-foreground hover:bg-ink-200 active:bg-ink-300 border border-border focus-visible:ring-ink-400/40',
   ghost:
-    'bg-transparent text-slate-600 hover:bg-slate-100 active:bg-slate-200 focus-visible:ring-slate-400/40',
+    'bg-transparent text-muted hover:bg-ink-100 active:bg-ink-200 focus-visible:ring-ink-400/40',
   danger:
     'bg-error-500 text-white hover:bg-error-600 active:bg-red-700 shadow-sm focus-visible:ring-error-500/40',
   success:

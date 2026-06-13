@@ -1,6 +1,11 @@
+/**
+ * EfficiencyDashboard — 招聘提效看板
+ * PRD §8.1.9: KPI+recharts/时间区间/tabular-nums
+ * Mock标注：数据为方向性预估，生产环境对接 /api/v2/analytics/efficiency
+ */
 import { useState } from 'react';
-import { TrendingUp, TrendingDown, BarChart3, Users, Clock, Target, ArrowUpRight, Shield, CheckCircle, Calendar } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { TrendingUp, TrendingDown, Calendar, CheckCircle } from 'lucide-react';
+import { KPICard } from '../../components/KPICard';
 import CABadge from '../../components/CABadge';
 
 interface MetricCard {
@@ -56,155 +61,125 @@ export default function EfficiencyDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900">招聘提效看板</h1>
-          <p className="text-sm text-slate-500 mt-1">以数据看见「省了多少，招得多快」· 支撑续费与增值决策</p>
+          <h1 className="text-xl font-bold text-foreground">招聘提效看板</h1>
+          <p className="text-sm text-muted mt-1">以数据看见「省了多少，招得多快」· 支撑续费与增值决策 · <span className="text-[10px] font-mono">[Mock: 方向性预估]</span></p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-white rounded-xl border border-slate-200 p-0.5">
+          <div className="flex items-center bg-surface rounded-xl border border-border p-0.5">
             {(['week', 'month', 'quarter'] as const).map(p => (
-              <button
-                key={p}
-                onClick={() => setPeriod(p)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                  period === p ? 'bg-primary-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'
-                }`}
-              >
+              <button key={p} onClick={() => setPeriod(p)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${period === p ? 'bg-brand-600 text-white shadow-sm' : 'text-foreground hover:bg-ink-50'}`}>
                 {p === 'week' ? '本周' : p === 'month' ? '本月' : '本季'}
               </button>
             ))}
           </div>
-          <div className="px-3 py-1.5 bg-amber-50 rounded-lg border border-amber-200">
-            <span className="text-[10px] font-semibold text-amber-700">数据为方向性预估【待验证】</span>
+          <div className="px-3 py-1.5 bg-warn-50 rounded-lg border border-warn-200">
+            <span className="text-[10px] font-semibold text-warn-700">数据为方向性预估【待验证】</span>
           </div>
         </div>
       </div>
 
-      {/* 核心指标卡片 */}
+      {/* 核心指标卡片 — 使用KPICard */}
       <div className="grid grid-cols-4 gap-4">
-        {metrics.map((metric, index) => (
-          <motion.div
+        {metrics.map((metric) => (
+          <KPICard
             key={metric.label}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className="bg-white rounded-xl border border-slate-200/80 shadow-card p-5 hover:shadow-card-hover transition-all"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-medium text-slate-500">{metric.label}</span>
-              <div className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold ${
-                metric.trend === 'up' ? 'bg-trust-50 text-trust-700' : metric.trend === 'down' ? 'bg-trust-50 text-trust-700' : 'bg-slate-50 text-slate-600'
-              }`}>
-                {metric.trend === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                {metric.change}
-              </div>
-            </div>
-            <p className="text-2xl font-bold text-slate-900">{metric.value}</p>
-            <p className="text-[10px] text-slate-400 mt-2">{metric.baseline}</p>
-            <p className="text-[10px] text-slate-400">{metric.note}</p>
-          </motion.div>
+            label={metric.label}
+            value={metric.value}
+            change={metric.change}
+            trend={metric.trend}
+            note={metric.baseline}
+          />
         ))}
       </div>
 
       <div className="grid grid-cols-12 gap-6">
         {/* 认证vs非认证对比 */}
-        <div className="col-span-7 bg-white rounded-xl border border-slate-200/80 shadow-card p-5">
+        <div className="col-span-7 bg-surface rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-slate-800">认证企业 vs 非认证企业</h3>
-              <p className="text-xs text-slate-500 mt-0.5">CA认证信任传导效果对比</p>
+              <h3 className="text-sm font-bold text-foreground">认证企业 vs 非认证企业</h3>
+              <p className="text-xs text-muted mt-0.5">CA认证信任传导效果对比</p>
             </div>
             <CABadge size="sm" />
           </div>
-
           <div className="space-y-3">
-            {comparisonData.map((item, index) => {
+            {comparisonData.map((item) => {
               const maxVal = Math.max(item.certified, item.uncertified);
               return (
                 <div key={item.metric} className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-700">{item.metric}</span>
+                    <span className="text-xs font-medium text-foreground">{item.metric}</span>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold text-primary-600">{item.certified}{item.unit}</span>
-                      <span className="text-xs text-slate-400">vs</span>
-                      <span className="text-xs font-medium text-slate-500">{item.uncertified}{item.unit}</span>
+                      <span className="text-xs font-bold text-brand-600 tabular-nums">{item.certified}{item.unit}</span>
+                      <span className="text-xs text-muted">vs</span>
+                      <span className="text-xs font-medium text-muted tabular-nums">{item.uncertified}{item.unit}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(item.certified / maxVal) * 100}%` }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
-                        className="h-full bg-gradient-to-r from-primary-400 to-primary-600 rounded-full"
-                      />
+                    <div className="flex-1 h-2 bg-ink-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-brand-400 to-brand-600 rounded-full transition-all duration-500" style={{ width: `${(item.certified / maxVal) * 100}%` }} />
                     </div>
-                    <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(item.uncertified / maxVal) * 100}%` }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
-                        className="h-full bg-slate-300 rounded-full"
-                      />
+                    <div className="flex-1 h-2 bg-ink-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-ink-300 rounded-full transition-all duration-500" style={{ width: `${(item.uncertified / maxVal) * 100}%` }} />
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
-
-          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-slate-100">
+          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border">
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-sm bg-gradient-to-r from-primary-400 to-primary-600" />
-              <span className="text-[10px] text-slate-500">CA认证企业</span>
+              <div className="w-3 h-3 rounded-sm bg-gradient-to-r from-brand-400 to-brand-600" />
+              <span className="text-[10px] text-muted">CA认证企业</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-sm bg-slate-300" />
-              <span className="text-[10px] text-slate-500">非认证企业</span>
+              <div className="w-3 h-3 rounded-sm bg-ink-300" />
+              <span className="text-[10px] text-muted">非认证企业</span>
             </div>
-            <span className="text-[10px] text-amber-600 ml-auto">* 数据为方向性预估【待验证】</span>
+            <span className="text-[10px] text-warn-600 ml-auto">* 数据为方向性预估【待验证】</span>
           </div>
         </div>
 
         {/* P0试点SOW时间线 */}
-        <div className="col-span-5 bg-white rounded-xl border border-slate-200/80 shadow-card p-5">
+        <div className="col-span-5 bg-surface rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-slate-800">P0试点里程碑</h3>
-              <p className="text-xs text-slate-500 mt-0.5">4-6周验证信任传导链路</p>
+              <h3 className="text-sm font-bold text-foreground">P0试点里程碑</h3>
+              <p className="text-xs text-muted mt-0.5">4-6周验证信任传导链路</p>
             </div>
-            <Calendar className="w-4 h-4 text-slate-400" />
+            <Calendar className="w-4 h-4 text-muted" />
           </div>
-
           <div className="space-y-3">
             {sowTimeline.map((event, index) => (
               <div key={event.week} className="flex items-start gap-3">
                 <div className="flex flex-col items-center">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
                     event.status === 'completed' ? 'bg-trust-500' :
-                    event.status === 'in_progress' ? 'bg-primary-500' : 'bg-slate-200'
+                    event.status === 'in_progress' ? 'bg-brand-500' : 'bg-ink-200'
                   }`}>
                     {event.status === 'completed' ? (
                       <CheckCircle className="w-3.5 h-3.5 text-white" />
                     ) : (
-                      <div className={`w-2 h-2 rounded-full ${event.status === 'in_progress' ? 'bg-white animate-pulse' : 'bg-slate-400'}`} />
+                      <div className={`w-2 h-2 rounded-full ${event.status === 'in_progress' ? 'bg-surface animate-pulse' : 'bg-ink-400'}`} />
                     )}
                   </div>
                   {index < sowTimeline.length - 1 && (
-                    <div className={`w-0.5 h-8 mt-1 ${event.status === 'completed' ? 'bg-trust-200' : 'bg-slate-200'}`} />
+                    <div className={`w-0.5 h-8 mt-1 ${event.status === 'completed' ? 'bg-trust-200' : 'bg-ink-200'}`} />
                   )}
                 </div>
                 <div className="flex-1 pb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-800">{event.week}</span>
+                    <span className="text-xs font-bold text-foreground">{event.week}</span>
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${
                       event.status === 'completed' ? 'bg-trust-50 text-trust-700' :
-                      event.status === 'in_progress' ? 'bg-primary-50 text-primary-700' : 'bg-slate-50 text-slate-500'
+                      event.status === 'in_progress' ? 'bg-brand-50 text-brand-700' : 'bg-ink-50 text-muted'
                     }`}>
                       {event.status === 'completed' ? '已完成' : event.status === 'in_progress' ? '进行中' : '待启动'}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-700 mt-1">{event.milestone}</p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">产出：{event.output}</p>
+                  <p className="text-xs text-foreground mt-1">{event.milestone}</p>
+                  <p className="text-[10px] text-muted mt-0.5">产出：{event.output}</p>
                 </div>
               </div>
             ))}

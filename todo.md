@@ -122,5 +122,65 @@
 - [x] 登出+Token清除
 
 ### D. GitHub推送
-- [ ] 推送v4.0代码到gaoyuhr213-tech/highermatch-atos
-- [ ] 推送P0补强后的最新代码
+- [x] 推送v4.0代码到gaoyuhr213-tech/highermatch-atos
+- [x] 推送P0补强后的最新代码
+- [x] 推送AI Capability Sprint 1代码
+
+---
+
+## Phase 9 — 前端高保真Demo增量升级（PRD v1.0 全量落地）
+
+### P0 设计系统与工程基础
+- [x] 新增 src/styles/tokens.css 全局设计变量（品牌色/中性色/语义色/证书印章色/字体/字阶/间距/圆角/阴影/焦点/motion token）
+- [x] 扩展 Tailwind 语义别名，禁止组件硬编码色值
+- [x] 补充全局字体栈：Inter/PingFang SC/Microsoft YaHei/Geist Mono + tabular-nums
+- [x] 完成 reduced-motion 与 color-scheme 适配
+- [x] 整合状态管理（保留useReducer+Context，清理残余）
+- [x] 补全 SSEFeed 组件并接入 Demo 事件流
+- [x] 接通 lib/trust 信任调用链 + useTrustedSession + mock CA adapter
+
+### P1 入场流程（最高优先级）
+- [x] 1:1还原证书助手标准界面（顶部栏/左侧导航/推荐应用/福利专区/蓉才通图标/右侧证书操作区/公告栏/底部版权/演示环境标识）
+- [x] 完整实现入场链路：模拟插入证书→企业身份识别→蓉才通图标点亮→可信入场Splash→认证态首页
+- [x] 未插证书点击蓉才通：抖动反馈+文字提示
+- [x] 可信入场Splash校验步骤逐项点亮动效 + reduced-motion降级
+- [x] 替换原有登录页/U盾PIN画面，产品内部不再保留旧登录入口
+
+### P1 App Shell 与全局组件
+- [x] 升级全局App Shell：侧边栏（折叠）+顶部导航栏+内容区，适配所有现有页面
+- [x] 完整实现原子组件 components/ui（Button/Input/Card/Badge/Avatar/Skeleton/Toast/Tooltip/Drawer/Modal/EmptyState）
+- [x] 实现业务组件（CABadge/IdentityChip/OperatorBadge/SignCeremony/DecisionCard/KPICard/DataTable/LineageGraph/CommandPalette/TrustChainVisualizer/SSEFeed）
+- [x] 核心组件补齐多状态+键盘交互+Tooltip+抽屉/弹窗规则
+- [x] 签名仪式/决策血统/信任链路特色动效与状态机
+
+### P2 页面高保真改版：B端
+- [x] /home 产品首页（身份态Landing/角色入口/DecisionCard/可信身份）
+- [x] /command 决策总控台（决策队列/KPI网格/组织健康/SSE事件流/Tabs/快捷键/批量操作）
+- [x] /pipeline 招聘流水线（6列拖拽/SuspendGate/CABadge/风险热力/多选/批量）
+- [x] /graph 人才图谱（全屏/CA签名边高亮/右击抽屉/a11y列表替代）
+- [x] /sourcing AI寻访（NL输入/候选人表/状态筛选/导出/操作人审批）
+- [x] /interview 异步面试（左侧追问/右侧信号时间轴/实时字幕评分/Mock标注）
+- [x] /job-qa 岗位答疑（问答卡片流/CABadge/信任标识）
+- [x] /community 决策社区（实名/脱敏/列表三态）
+- [x] /efficiency 提效看板（KPI+recharts/时间区间/tabular）
+- [x] /audit 审计日志（DataTable/correlationId/签名主体+操作人下钻）
+- [x] 全局决策血统抽屉（证据/反向证据/模型/Prompt版本/签名主体/操作人）
+
+### P2 页面高保真改版：C端/专家端/国企端/公开页
+- [x] /c/coach AI Job Coach
+- [x] /c/apply 智能投递
+- [x] /c/endorsement 背书卡
+- [x] /c/decision-hub 决策社区（C端）
+- [x] /expert/reviews 匿名评审
+- [x] /expert/rewards 积分激励
+- [x] /soe/succession 国企继任
+- [x] /soe/commons 信调共享
+- [x] /e/:slug 公开背书验真页（官网级视觉/无登录/验真动效/反向引流）
+
+### P3 无障碍、兼容性与验收
+- [x] 所有页面补齐 Empty/Loading/Error 三态
+- [x] WCAG 2.1 AA（键盘/focus ring/对比度/aria-label/live region/图谱替代视图）
+- [x] 适配 1440/1920 桌面分辨率
+- [x] 路由级 code split + 控制台报错清零
+- [x] npm run dev 本地预览全流程可交互无报错
+- [x] Mock/Demo/待验证项标注完整

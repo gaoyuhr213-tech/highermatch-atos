@@ -21,7 +21,7 @@ const typeStyles: Record<ToastType, { bg: string; icon: string; border: string }
   success: { bg: 'bg-success-50', icon: 'text-success-500', border: 'border-green-200' },
   error: { bg: 'bg-error-50', icon: 'text-error-500', border: 'border-red-200' },
   warning: { bg: 'bg-warning-50', icon: 'text-warning-500', border: 'border-amber-200' },
-  info: { bg: 'bg-primary-50', icon: 'text-primary-500', border: 'border-primary-200' },
+  info: { bg: 'bg-brand-50', icon: 'text-brand-500', border: 'border-brand-200' },
 };
 
 const icons: Record<ToastType, React.ReactNode> = {
@@ -98,12 +98,12 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             >
               <span className={`shrink-0 mt-0.5 ${style.icon}`}>{icons[t.type]}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-900">{t.title}</p>
-                {t.description && <p className="mt-0.5 text-xs text-slate-600">{t.description}</p>}
+                <p className="text-sm font-medium text-foreground">{t.title}</p>
+                {t.description && <p className="mt-0.5 text-xs text-muted">{t.description}</p>}
               </div>
               <button
                 onClick={() => dismiss(t.id)}
-                className="shrink-0 p-1 text-slate-400 hover:text-slate-600 rounded transition-colors"
+                className="shrink-0 p-1 text-muted hover:text-muted rounded transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

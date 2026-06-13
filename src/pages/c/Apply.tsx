@@ -34,18 +34,18 @@ export default function Apply() {
   return (
     <div className="p-8 max-w-[1000px] mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <div><h1 className="text-2xl font-bold text-slate-900">智能投递</h1><p className="text-sm text-slate-500 mt-1">Smart Apply · AI匹配最优岗位一键投递</p></div>
+        <div><h1 className="text-2xl font-bold text-foreground">智能投递</h1><p className="text-sm text-muted mt-1">Smart Apply · AI匹配最优岗位一键投递</p></div>
         <div className="flex items-center gap-3">
           {appliedCount > 0 && <span className="badge badge-green">{appliedCount} 已投递</span>}
           <button onClick={handleBatchApply} className="btn-primary"><Send className="w-4 h-4" />一键投递匹配度≥80%</button>
         </div>
       </div>
 
-      <div className="glass-card p-4 mb-6 flex items-center gap-3 bg-gradient-to-r from-primary-50 to-transparent border-l-4 border-l-primary-500">
-        <Rocket className="w-5 h-5 text-primary-500" />
+      <div className="glass-card p-4 mb-6 flex items-center gap-3 bg-gradient-to-r from-brand-50 to-transparent border-l-4 border-l-brand-500">
+        <Rocket className="w-5 h-5 text-brand-500" />
         <div>
-          <p className="text-sm font-medium text-slate-700">基于你的简历和职业画像，AI已为你匹配以下高适配岗位</p>
-          <p className="text-xs text-slate-500 mt-0.5">匹配算法综合考虑：技能覆盖度、行业经验、薪资期望、地理偏好</p>
+          <p className="text-sm font-medium text-foreground">基于你的简历和职业画像，AI已为你匹配以下高适配岗位</p>
+          <p className="text-xs text-muted mt-0.5">匹配算法综合考虑：技能覆盖度、行业经验、薪资期望、地理偏好</p>
         </div>
       </div>
 
@@ -53,24 +53,24 @@ export default function Apply() {
         {jobs.map(j => {
           const status = statuses[j.id] || 'idle';
           return (
-            <div key={j.id} className={`glass-card p-5 flex items-center gap-5 group transition-all ${status === 'applied' ? 'border-l-4 border-l-success-400 bg-success-50/20' : 'cursor-pointer hover:shadow-card'}`}>
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-                <Building2 className="w-6 h-6 text-primary-600" />
+            <div key={j.id} className={`glass-card p-5 flex items-center gap-5 group transition-all ${status === 'applied' ? 'border-l-4 border-l-success-400 bg-ok-50/20' : 'cursor-pointer hover:shadow-card'}`}>
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-100 to-brand-200 flex items-center justify-center">
+                <Building2 className="w-6 h-6 text-brand-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-base font-semibold text-slate-800">{j.title}</h3>
+                  <h3 className="text-base font-semibold text-foreground">{j.title}</h3>
                   <span className={`badge ${j.match >= 90 ? 'badge-green' : j.match >= 80 ? 'badge-blue' : 'badge-yellow'}`}>{j.match}% 匹配</span>
                   {status === 'applied' && <span className="badge badge-green">已投递</span>}
                 </div>
-                <div className="flex items-center gap-4 mt-1.5 text-xs text-slate-500">
+                <div className="flex items-center gap-4 mt-1.5 text-xs text-muted">
                   <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{j.company}</span>
                   <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{j.location}</span>
                   <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{j.posted}</span>
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                   {j.tags.map(t => <span key={t} className="badge badge-blue text-[10px]">{t}</span>)}
-                  <span className="text-sm font-semibold text-primary-600 ml-auto">{j.salary}</span>
+                  <span className="text-sm font-semibold text-brand-600 ml-auto">{j.salary}</span>
                 </div>
               </div>
               <div className="w-24 flex justify-end">
@@ -80,12 +80,12 @@ export default function Apply() {
                   </button>
                 )}
                 {status === 'applying' && (
-                  <div className="flex items-center gap-2 text-primary-500">
+                  <div className="flex items-center gap-2 text-brand-500">
                     <Loader2 className="w-4 h-4 animate-spin" /><span className="text-xs">投递中</span>
                   </div>
                 )}
                 {status === 'applied' && (
-                  <div className="flex items-center gap-2 text-success-600">
+                  <div className="flex items-center gap-2 text-ok-600">
                     <CheckCircle2 className="w-4 h-4" /><span className="text-xs font-medium">已投递</span>
                   </div>
                 )}
