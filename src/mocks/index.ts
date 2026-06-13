@@ -10,12 +10,15 @@ export async function initMocks(): Promise<void> {
   const { worker } = await import('./browser');
   
   await worker.start({
-    onUnhandledRequest: 'bypass', // 未匹配的请求直接放行
+    onUnhandledRequest: 'bypass',
+    quiet: true,
     serviceWorker: {
       url: '/mockServiceWorker.js',
     },
+    findWorker(scriptURL) {
+      return scriptURL.includes('mockServiceWorker');
+    },
   });
 
-  console.log('[MSW] Mock Service Worker 已启动');
-  console.log('[MSW] 拦截 API 端点: /api/v1/*');
+  console.log('[MSW] Mock Service Worker 已启动，拦截 /api/v1/*');
 }
