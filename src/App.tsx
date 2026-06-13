@@ -61,9 +61,9 @@ export default function App() {
             <BrowserRouter>
               <Suspense fallback={<LoadingView text="正在加载页面..." />}>
                 {!state.authenticated ? (
-                  <UShieldLogin />
+                  <UShieldLogin key="login" />
                 ) : (
-                  <DashboardLayout>
+                  <DashboardLayout key="dashboard">
                     <Routes>
                       {/* B端 */}
                       <Route path="/b/command" element={<CommandCenter />} />
@@ -90,7 +90,7 @@ export default function App() {
                       <Route path="*" element={<Navigate to="/b/command" replace />} />
                     </Routes>
                     {state.showLineage && (
-                      <DecisionLineage onClose={() => dispatch({ type: 'CLOSE_LINEAGE' })} />
+                      <DecisionLineage onClose={() => dispatch({ type: 'CLOSE_LINEAGE' })} decisionId={state.lineageTarget || 'default'} />
                     )}
                   </DashboardLayout>
                 )}

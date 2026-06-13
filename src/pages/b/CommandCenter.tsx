@@ -16,8 +16,8 @@ const featureFlags = [
 
 export default function CommandCenter() {
   const { setShowLineage } = useApp();
-  const { data: proposalsData, isLoading: proposalsLoading } = useDecisionProposals({ status: 'pending' });
-  const { data: metricsData, isLoading: metricsLoading } = useOrgHealthMetrics();
+  const { data: proposalsData, isLoading: proposalsLoading, error: proposalsError } = useDecisionProposals({ status: 'pending' });
+  const { data: metricsData, isLoading: metricsLoading, error: metricsError } = useOrgHealthMetrics();
   const { data: eventsData } = useSSEEvents();
 
   const metrics = metricsData ? Object.values(metricsData) : [];
@@ -69,7 +69,9 @@ export default function CommandCenter() {
     URL.revokeObjectURL(url);
   };
 
+  const loadError = proposalsError || metricsError;
   if (proposalsLoading || metricsLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载决策数据...</span></div>;
+  if (loadError) return <div className="p-8 text-center text-red-500">加载失败：{(loadError as Error).message}</div>;
 
   return (
     <div className="p-8 max-w-[1400px] mx-auto">

@@ -1,10 +1,18 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 
 interface Props { children: ReactNode; fallback?: ReactNode; }
-interface State { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null; showDetails: boolean; }
+interface State { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null; showDetails: boolean; retryCount: number; }
+
+// DOM操作错误关键词（通常由浏览器扩展注入DOM导致）
+const DOM_ERROR_PATTERNS = ['insertBefore', 'removeChild', 'appendChild', 'replaceChild', 'not a child'];
+function isDOMConflictError(error: Error): boolean {
+  const msg = error.message || '';
+  return DOM_ERROR_PATTERNS.some(p => msg.includes(p));
+}
+const MAX_AUTO_RETRY = 2;
 
 export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false, error: null, errorInfo: null, showDetails: false };
+  state: State = { hasError: false, error: null, errorInfo: null, showDetails: false, retryCount: 0 };
 
   static getDerivedStateFromError(error: Error): Partial<State> {
     return { hasError: true, error };
@@ -13,10 +21,17 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ errorInfo });
     console.error('[ErrorBoundary]', error, errorInfo);
+    // 对DOM冲突错误自动重试（浏览器扩展导致）
+    if (isDOMConflictError(error) && this.state.retryCount < MAX_AUTO_RETRY) {
+      console.warn(`[ErrorBoundary] DOM冲突错误，自动重试 (${this.state.retryCount + 1}/${MAX_AUTO_RETRY})`);
+      setTimeout(() => {
+        this.setState(s => ({ hasError: false, error: null, errorInfo: null, retryCount: s.retryCount + 1 }));
+      }, 100);
+    }
   }
 
   handleRetry = () => {
-    this.setState({ hasError: false, error: null, errorInfo: null, showDetails: false });
+    this.setState({ hasError: false, error: null, errorInfo: null, showDetails: false, retryCount: 0 });
   };
 
   render() {

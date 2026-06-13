@@ -9,8 +9,8 @@ const typeIcons: Record<string, typeof User> = { talent: User, company: Building
 const edgeTypeLabels: Record<string, string> = { employed_at: '任职于', has_skill: '具备技能', referred_by: '推荐关系' };
 
 export default function Graph() {
-  const { data: nodesData, isLoading: nodesLoading } = useGraphNodes();
-  const { data: edgesData, isLoading: edgesLoading } = useGraphEdges();
+  const { data: nodesData, isLoading: nodesLoading, error: nodesError } = useGraphNodes();
+  const { data: edgesData, isLoading: edgesLoading, error: edgesError } = useGraphEdges();
   const [zoom, setZoom] = useState(1);
   const [selected, setSelected] = useState<GraphNode | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -31,7 +31,9 @@ export default function Graph() {
   const filteredNodes = searchTerm ? graphNodes.filter(n => n.name.toLowerCase().includes(searchTerm.toLowerCase())) : graphNodes;
   const highlightedIds = new Set(filteredNodes.map(n => n.id));
 
+  const error = nodesError || edgesError;
   if (isLoading) return <div className="p-8 flex items-center justify-center h-64"><Loader2 className="w-8 h-8 animate-spin text-primary-500" /><span className="ml-3 text-slate-500">加载人才图谱...</span></div>;
+  if (error) return <div className="p-8 text-center text-red-500">加载失败：{(error as Error).message}</div>;
 
   return (
     <div className="p-8 h-full flex flex-col">
