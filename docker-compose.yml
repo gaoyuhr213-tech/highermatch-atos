@@ -1,7 +1,8 @@
 version: '3.8'
 services:
+  # ─── PostgreSQL with pgvector (升级为向量搜索支持) ─────────────────────────
   postgres:
-    image: postgres:15-alpine
+    image: pgvector/pgvector:pg16
     environment:
       POSTGRES_DB: atos
       POSTGRES_USER: atos_admin
@@ -16,16 +17,21 @@ services:
       timeout: 5s
       retries: 5
 
+  # ─── Redis (Session Store + BullMQ Queue + Agent Memory) ──────────────────
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    command: redis-server --maxmemory 512mb --maxmemory-policy allkeys-lru --save 60 1000
+    volumes:
+      - redisdata:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # ─── API Server (Express + tRPC + AI Routes) ─────────────────────────────
   backend:
     build: .
     ports:
@@ -35,6 +41,8 @@ services:
       PORT: 3001
       DATABASE_URL: postgres://atos_admin:${DB_PASSWORD:-atos_dev_2024}@postgres:5432/atos
       REDIS_URL: redis://redis:6379
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      JWT_SECRET: ${JWT_SECRET:-dev_secret_change_in_production}
       CORS_ORIGIN: http://localhost:5173
     depends_on:
       postgres:
@@ -43,6 +51,31 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # ─── AI Worker (BullMQ Job Processor: Whisper, Resume Parse, etc.) ────────
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://atos_admin:${DB_PASSWORD:-atos_dev_2024}@postgres:5432/atos
+      REDIS_URL: redis://redis:6379
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-5}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+
+  # ─── Frontend (Nginx serving Vite build) ──────────────────────────────────
   frontend:
     image: nginx:alpine
     ports:
@@ -56,3 +89,4 @@ services:
 
 volumes:
   pgdata:
+  redisdata:

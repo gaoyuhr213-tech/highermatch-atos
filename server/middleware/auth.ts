@@ -1,7 +1,18 @@
 import type { Request, Response, NextFunction } from 'express';
 
+export interface AuthUser {
+  sub: string;
+  userId: string;
+  tenantId: string;
+  role: string;
+  permissions: string[];
+  certSerial: string;
+  email?: string;
+  name?: string;
+}
+
 export interface AuthenticatedRequest extends Request {
-  user?: { sub: string; tenantId: string; role: string; permissions: string[]; certSerial: string; };
+  user?: AuthUser;
 }
 
 export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction) {
@@ -17,7 +28,7 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
     if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
       return res.status(401).json({ code: 'AUTH_003', message: '令牌已过期' });
     }
-    req.user = { sub: payload.sub, tenantId: payload.tenantId, role: payload.role, permissions: payload.permissions || [], certSerial: payload.certSerial };
+    req.user = { sub: payload.sub, userId: payload.sub, tenantId: payload.tenantId, role: payload.role, permissions: payload.permissions || [], certSerial: payload.certSerial, email: payload.email, name: payload.name };
     next();
   } catch { return res.status(401).json({ code: 'AUTH_004', message: '令牌验证失败' }); }
 }
