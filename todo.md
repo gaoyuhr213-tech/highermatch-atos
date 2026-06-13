@@ -184,3 +184,56 @@
 - [x] 路由级 code split + 控制台报错清零
 - [x] npm run dev 本地预览全流程可交互无报错
 - [x] Mock/Demo/待验证项标注完整
+
+---
+
+## Phase 10 — AI Capability Sprint 2（Intelligence Layer 全量落地）
+
+### P0 AI Interview OS — 前端Video Workspace
+- [x] 重写Interview.tsx为完整Video Workspace（Camera/Avatar/Question/Transcript/LiveScore/Timeline/Timer）
+- [x] 实现WebSocket客户端hook（useInterviewWebSocket）连接后端实时事件
+- [x] 实现前端音频录制+分片上传（MediaRecorder API → 后端Whisper Worker）
+- [x] 实时Transcript面板（WebSocket推送 → 逐句渲染 + STAR高亮）
+- [x] Live Score面板（Competency雷达图 + 实时分数更新）
+- [x] Timeline面板（信号时间轴 + 多模态事件标记）
+- [x] Session Timer + 进度条 + 问题切换
+
+### P0 AI Interview OS — 后端Agent Pipeline端到端
+- [x] 完善Orchestrator：createSession → startInterview → processAudioChunk → endInterview完整流程
+- [x] Whisper Worker真实调用LLM client（audio → transcript）
+- [x] STAR Agent端到端：transcript → STAR结构识别 → 事件发布
+- [x] Competency Agent端到端：transcript → 5维度评分 → 事件发布
+- [x] Follow-up Agent端到端：context → 追问生成 → 事件发布
+- [x] Scoring Agent端到端：多Agent结果 → 加权评分 → 事件发布
+- [x] Summary Agent端到端：全会话 → interview_report生成 → DB持久化
+- [x] WebSocket Server注册到Express（ws://升级 + 认证）
+- [x] SSE端点注册（/api/v2/interview/:id/events）
+
+### P0 前后端集成闭环
+- [x] 前端WebSocket连接 → 后端事件总线 → 实时UI更新
+- [x] 前端音频上传 → 后端Whisper → transcript → 前端渲染
+- [x] Agent事件（star_detected/competency_signal/followup/score_update）→ 前端面板实时更新
+- [x] Interview结束 → Summary Agent → Report生成 → 前端展示
+
+### P1 Resume Intelligence — 前后端集成
+- [x] 重写Resume相关前端页面（上传/解析/结果展示）
+- [x] 前端：JD+Resume上传 → 后端Parser → Skill/Risk/Ranking/Explain → 结果展示
+- [x] Match Score + Highlight + Missing Skill + Risk Signal + Reason可视化
+- [x] Talent Graph前端可视化（pgvector相似度搜索结果）
+
+### P2 PeopleGPT — 前后端集成
+- [x] 重写Sourcing页面为PeopleGPT（NL输入 → Agent Pipeline → 结果列表）
+- [x] Search Agent → Ranking Agent → 候选人列表 + Match Score + Reason
+- [x] Outreach Agent → Email Generator → Cold Email + Follow-up Sequence展示
+- [x] 前端实时搜索状态（SSE推送搜索进度）
+
+### P3 Candidate Copilot — 前后端集成
+- [x] Resume Rewrite Agent前后端集成（上传简历 → AI优化 → 对比展示）
+- [x] Mock Interview Agent前后端集成（实时对话 → 评分 → 建议）
+- [x] Career Planner + Salary Agent + Learning Roadmap前后端集成
+
+### P4 Workflow Multi-Agent编排
+- [x] 实现LangGraph式DAG编排引擎（server/ai/workflow/orchestrator.ts）
+- [x] 实现完整招聘流程DAG：Interview-Full / Resume-Screening / People-Search 三个预置工作流
+- [x] Event Bus审计追踪（所有Agent调用记录持久化 + /api/v2/workflow/runs/:id/audit）
+- [x] Workflow API路由（execute/status/resume/cancel/audit/definitions）

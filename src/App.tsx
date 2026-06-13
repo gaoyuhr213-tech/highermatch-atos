@@ -31,6 +31,9 @@ const Rewards = lazy(() => import('./pages/expert/Rewards'));
 const Succession = lazy(() => import('./pages/soe/Succession'));
 const Commons = lazy(() => import('./pages/soe/Commons'));
 const DecisionLineage = lazy(() => import('./pages/DecisionLineage'));
+const ResumeIntelligence = lazy(() => import('./pages/b/ResumeIntelligence'));
+const PeopleGPT = lazy(() => import('./pages/b/PeopleGPT'));
+const CandidateCopilot = lazy(() => import('./pages/c/CandidateCopilot'));
 import { CommandPalette } from './components/CommandPalette';
 
 // ─── 兼容旧API（供子组件过渡期使用） ────────────────────
@@ -113,10 +116,13 @@ function AppRoutes() {
                     <Route path="/b/community" element={<Community />} />
                     <Route path="/b/efficiency" element={<EfficiencyDashboard />} />
                     <Route path="/b/audit" element={<AuditLog />} />
+                    <Route path="/b/resume-intelligence" element={<ResumeIntelligence />} />
+                    <Route path="/b/people-gpt" element={<PeopleGPT />} />
                     {/* C端 */}
                     <Route path="/c/coach" element={<Coach />} />
                     <Route path="/c/apply" element={<Apply />} />
                     <Route path="/c/endorsement" element={<Endorsement />} />
+                    <Route path="/c/copilot" element={<CandidateCopilot />} />
                     <Route path="/c/decision-hub" element={<DecisionHub />} />
                     {/* 专家端 */}
                     <Route path="/expert/reviews" element={<Reviews />} />
