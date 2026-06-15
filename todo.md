@@ -300,52 +300,52 @@
 ## Phase 12 — Learning Flywheel（数据飞轮）
 
 ### 模块一：Feedback Engine
-- [ ] feedback/engine.ts — 显式反馈收集（ThumbUp/ThumbDown/Reason/Correction/ManualRanking/ManualScore）
-- [ ] feedback/types.ts — 反馈类型定义（RecruiterFeedback/CandidateFeedback/SystemFeedback）
-- [ ] feedback/schema.ts — DB Schema（feedback_entries + 索引）
-- [ ] feedback/api.ts — API端点（submit/query/aggregate/export）
+- [x] feedback/engine.ts — 显式反馈收集（ThumbUp/ThumbDown/Reason/Correction/ManualRanking/ManualScore）
+- [x] feedback/types.ts — 反馈类型定义（RecruiterFeedback/CandidateFeedback/SystemFeedback）
+- [x] feedback/schema.ts — DB Schema（feedback_entries + 索引）
+- [x] feedback/api.ts — API端点（submit/query/aggregate/export）
 
 ### 模块二：Implicit Signals
-- [ ] signals/collector.ts — 隐式信号采集（Click/Save/Interview/Offer/Hire/Retention/Performance/Reject）
-- [ ] signals/types.ts — 信号类型定义 + 权重矩阵
-- [ ] signals/schema.ts — DB Schema（implicit_signals + 时序索引）
-- [ ] signals/aggregator.ts — 信号聚合（用户级/候选人级/岗位级）
+- [x] signals/collector.ts — 隐式信号采集（Click/Save/Interview/Offer/Hire/Retention/Performance/Reject）
+- [x] signals/types.ts — 信号类型定义 + 权重矩阵
+- [x] signals/schema.ts — DB Schema（implicit_signals + 时序索引）
+- [x] signals/aggregator.ts — 信号聚合（用户级/候选人级/岗位级）
 
 ### 模块三：Label Engine
-- [ ] labels/engine.ts — 标签引擎（hire_label/performance_label/retention_label/promotion_label）
-- [ ] labels/types.ts — 标签类型 + 置信度 + 来源追溯
-- [ ] labels/schema.ts — DB Schema（outcome_labels）
-- [ ] labels/generator.ts — 自动标签生成（基于隐式信号 + 时间窗口）
+- [x] labels/engine.ts — 标签引擎（hire_label/performance_label/retention_label/promotion_label）
+- [x] labels/types.ts — 标签类型 + 置信度 + 来源追溯
+- [x] labels/schema.ts — DB Schema（outcome_labels）
+- [x] labels/generator.ts — 自动标签生成（基于隐式信号 + 时间窗口）
 
 ### 模块四：Dataset Builder
-- [ ] dataset/builder.ts — 数据集构建器（Golden/Regression/Failure/Replay）
-- [ ] dataset/types.ts — 数据集类型定义
-- [ ] dataset/schema.ts — DB Schema（datasets + dataset_entries）
-- [ ] dataset/curator.ts — 数据集策展（自动筛选 + 质量评分 + 去重）
+- [x] dataset/builder.ts — 数据集构建器（Golden/Regression/Failure/Replay）
+- [x] dataset/types.ts — 数据集类型定义
+- [x] dataset/schema.ts — DB Schema（datasets + dataset_entries）
+- [x] dataset/curator.ts — 数据集策展（自动筛选 + 质量评分 + 去重）
 
 ### 模块五：Prompt Optimizer
-- [ ] optimizer/engine.ts — Prompt优化引擎（错误/退化/高成本/低成功率检测）
-- [ ] optimizer/types.ts — 优化类型定义
-- [ ] optimizer/versioning.ts — Prompt版本管理（版本链 + Diff + Rollback）
-- [ ] optimizer/auto-improve.ts — 自动优化（基于Eval结果 + Feedback + Labels）
+- [x] optimizer/engine.ts — Prompt优化引擎（错误/退化/高成本/低成功率检测）
+- [x] optimizer/types.ts — 优化类型定义
+- [x] optimizer/versioning.ts — Prompt版本管理（版本链 + Diff + Rollback）
+- [x] optimizer/auto-improve.ts — 自动优化（基于Eval结果 + Feedback + Labels）
 
 ### 模块六：Experiment Platform
-- [ ] experiment/platform.ts — A/B Testing平台（Traffic Split/Compare/Metrics/Winner Selection）
-- [ ] experiment/types.ts — 实验类型定义
-- [ ] experiment/schema.ts — DB Schema（experiments + variants + assignments + metrics）
-- [ ] experiment/analyzer.ts — 统计分析（显著性检验 + 效果量 + 置信区间）
+- [x] experiment/platform.ts — A/B Testing平台（Traffic Split/Compare/Metrics/Winner Selection）
+- [x] experiment/types.ts — 实验类型定义
+- [x] experiment/schema.ts — DB Schema（experiments + variants + assignments + metrics）
+- [x] experiment/analyzer.ts — 统计分析（显著性检验 + 效果量 + 置信区间）
 
 ### 模块七：Learning Dashboard
-- [ ] dashboard/aggregator.ts — 学习仪表盘数据聚合（Success Rate/Quality/Latency/Cost/Feedback Score/Agent Score）
-- [ ] dashboard/types.ts — Dashboard类型定义
+- [x] dashboard/aggregator.ts — 学习仪表盘数据聚合（Success Rate/Quality/Latency/Cost/Feedback Score/Agent Score）
+- [x] dashboard/types.ts — Dashboard类型定义
 
 ### 模块八：Continuous Improvement Loop
-- [ ] loop/orchestrator.ts — 持续改进编排器（Feedback→Dataset→Eval→Optimize→Deploy→Monitor→Learn）
-- [ ] loop/types.ts — 循环类型定义
-- [ ] loop/scheduler.ts — 自动调度（定时Eval + 退化检测 + 自动优化触发）
+- [x] loop/orchestrator.ts — 持续改进编排器（Feedback→Dataset→Eval→Optimize→Deploy→Monitor→Learn）
+- [x] loop/types.ts — 循环类型定义
+- [x] loop/scheduler.ts — 自动调度（定时Eval + 退化检测 + 自动优化触发）
 
 ### 验证与交付
-- [ ] TypeScript 0 errors
-- [ ] Vite Build 通过
-- [ ] GitHub Push
-- [ ] CHANGELOG_PHASE12.md
+- [x] TypeScript 0 errors
+- [x] Vite Build 通过（1.68s）
+- [x] GitHub Push（9331329 → f06cd3b）
+- [x] CHANGELOG_PHASE12.md
