@@ -237,3 +237,82 @@
 - [x] 实现完整招聘流程DAG：Interview-Full / Resume-Screening / People-Search 三个预置工作流
 - [x] Event Bus审计追踪（所有Agent调用记录持久化 + /api/v2/workflow/runs/:id/audit）
 - [x] Workflow API路由（execute/status/resume/cancel/audit/definitions）
+
+---
+
+## Phase 11 — Productionization Sprint（从 Intelligence 到 Reliability）
+
+### Sprint 11-A: Memory OS（P0 ★★★★★）
+- [ ] memory/store.ts — MemoryStore 统一接口（Session/User/Candidate/Recruiter/Semantic/Episodic）
+- [ ] memory/session-memory.ts — 会话级短期记忆（Redis TTL）
+- [ ] memory/user-memory.ts — 用户长期记忆（Postgres + pgvector）
+- [ ] memory/candidate-memory.ts — 候选人画像记忆
+- [ ] memory/recruiter-memory.ts — 招聘官偏好记忆
+- [ ] memory/semantic-memory.ts — 语义记忆（Embedding + pgvector 检索）
+- [ ] memory/episodic-memory.ts — 情景记忆（事件序列 + 时间衰减）
+- [ ] memory/retriever.ts — Memory Retrieval（Hybrid Search + Reranker）
+- [ ] memory/compressor.ts — Memory Compression（摘要 + 遗忘曲线）
+- [ ] memory/reflection-agent.ts — Reflection Agent（自省 + 元认知）
+- [ ] memory/summary-agent.ts — Memory Summary Agent
+- [ ] DB Schema: memory_entries / memory_embeddings / memory_sessions
+- [ ] Redis Key 设计文档
+- [ ] 所有 Agent 支持 Memory Injection（统一 context.memory 接口）
+- [ ] 单元测试
+
+### Sprint 11-B: Evaluation Framework（P1 ★★★★★）
+- [ ] eval/framework.ts — Eval Engine 核心
+- [ ] eval/dataset/ — Golden Dataset（Interview/Resume/People/Copilot）
+- [ ] eval/replay.ts — Agent 执行回放
+- [ ] eval/scorer.ts — 多维度评分器
+- [ ] eval/metrics.ts — 指标定义（Accuracy/Hallucination/Latency/Cost）
+- [ ] eval/regression.ts — 回归测试（Prompt 修改前后对比）
+- [ ] eval/prompt-versioning.ts — Prompt 版本管理
+- [ ] eval/ab-testing.ts — A/B Testing 框架
+- [ ] eval/scorecards/ — 评分卡模板
+- [ ] eval/benchmark/ — Benchmark Suite
+- [ ] API: /api/v2/eval/*
+
+### Sprint 11-C: Observability（P2 ★★★★★）
+- [ ] observability/tracer.ts — Agent Trace（OpenTelemetry 兼容）
+- [ ] observability/workflow-trace.ts — Workflow DAG Trace
+- [ ] observability/prompt-trace.ts — Prompt 调用追踪
+- [ ] observability/metrics.ts — Metrics Collector（Cost/Latency/Failure Rate）
+- [ ] observability/cost-tracker.ts — Token 用量 + 成本追踪
+- [ ] observability/dashboard.ts — 可观测性 Dashboard 数据聚合
+- [ ] observability/replay.ts — Agent 执行回放（Timeline 视图）
+- [ ] DB Schema: traces / spans / metrics
+- [ ] API: /api/v2/observability/*
+
+### Sprint 11-D: Human-in-the-Loop（P3 ★★★★★）
+- [ ] hitl/approval-node.ts — 审批节点（Pause/Approve/Reject/Resume）
+- [ ] hitl/review-queue.ts — 人工审核队列
+- [ ] hitl/manual-override.ts — 手动覆盖（Override Agent 决策）
+- [ ] hitl/escalation.ts — 升级机制（置信度低 → 人工）
+- [ ] hitl/audit-trail.ts — 人工操作审计
+- [ ] 集成到 Workflow Engine（所有 DAG 支持 Pause/Resume）
+- [ ] 支持场景：Offer Approval / Interview Review / Resume Ranking Review / Workflow Resume
+- [ ] API: /api/v2/hitl/*
+
+### Sprint 11-E: Multimodal Interview（P4 ★★★★☆）
+- [ ] signal/video-worker.ts — 视频帧分析 Worker
+- [ ] signal/vision-agent.ts — 视觉信号 Agent（表情/眼神/姿态）
+- [ ] signal/emotion-detector.ts — 情绪信号检测
+- [ ] signal/speech-pace.ts — 语速/停顿/置信度分析
+- [ ] signal/multimodal-timeline.ts — 多模态信号时间轴融合
+- [ ] signal/fusion.ts — 音频+视觉信号融合评分
+- [ ] API: /api/v2/signal/*
+
+### Sprint 11-F: Recruiting Operator（P5 ★★★★★）
+- [ ] operator/command-center.ts — 自然语言招聘指挥中心
+- [ ] operator/intent-parser.ts — 意图解析（NL → Agent Pipeline 调度）
+- [ ] operator/planner.ts — 执行计划生成（多 Agent 编排）
+- [ ] operator/executor.ts — 计划执行器（调用 PeopleGPT/Resume/Interview/Ranking）
+- [ ] operator/explainer.ts — 决策解释器（为什么推荐/为什么风险高）
+- [ ] operator/conversation.ts — 多轮对话管理（Memory OS 集成）
+- [ ] API: /api/v2/operator/*
+
+### 验证与交付
+- [ ] TypeScript 0 errors
+- [ ] Vite Build 通过
+- [ ] GitHub Push
+- [ ] CHANGELOG_PHASE11.md
