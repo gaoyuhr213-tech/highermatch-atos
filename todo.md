@@ -349,3 +349,85 @@
 - [x] Vite Build 通过（1.68s）
 - [x] GitHub Push（9331329 → f06cd3b）
 - [x] CHANGELOG_PHASE12.md
+
+---
+
+## Phase 13 — Enterprise OS（从技术项目到商业产品）
+
+### Phase 13-A: Multi-Tenant + RBAC + Permission Engine（⭐⭐⭐⭐⭐⭐）
+- [ ] Tenant Model（Tenant → Organization → Workspace → User → Role → Permission）
+- [ ] Postgres Row Level Security（全表RLS策略）
+- [ ] Redis Namespace隔离（tenant:{id}:*前缀）
+- [ ] S3 Bucket Prefix隔离
+- [ ] pgvector租户隔离（向量索引分区）
+- [ ] RBAC引擎（Admin/Recruiter/Interviewer/HiringManager/Candidate 5角色）
+- [ ] ABAC引擎（属性级权限控制）
+- [ ] Permission Matrix（资源×动作×角色 完整矩阵）
+- [ ] Tenant Provisioning（自动创建租户 + 初始化数据）
+- [ ] Billing Model（Usage/Token/Seat/Storage 4维计费）
+- [ ] Quota Management（配额管理 + 超限降级）
+- [ ] Tenant-level Audit Trail
+
+### Phase 13-B: Compliance Engine（⭐⭐⭐⭐⭐⭐）
+- [ ] GDPR Compliance（数据主体权利 + 删除权 + 可携带权）
+- [ ] 国密适配（SM2/SM3/SM4 + 国密TLS）
+- [ ] PII Detection Engine（自动识别敏感数据）
+- [ ] Data Masking（动态脱敏 + 静态脱敏 + 规则引擎）
+- [ ] Data Residency（数据驻留策略 + 地域路由）
+- [ ] Retention Policy Engine（数据保留策略 + 自动清理）
+- [ ] Encryption at Rest + in Transit
+- [ ] Secret Vault（密钥管理 + 轮换）
+- [ ] Compliance Audit Log（合规审计日志 + 导出）
+- [ ] Compliance Policy Engine（策略定义 + 自动检查 + 违规告警）
+- [ ] Data Classification（数据分级分类）
+- [ ] Consent Management（用户同意管理）
+
+### Phase 13-C: Production Hardening（⭐⭐⭐⭐⭐）
+- [ ] Circuit Breaker（熔断器 + 半开恢复）
+- [ ] Rate Limiter（多维限流：IP/User/Tenant/API）
+- [ ] Retry + Exponential Backoff + Jitter
+- [ ] Bulkhead Pattern（舱壁隔离）
+- [ ] Dead Letter Queue（死信队列 + 重试策略）
+- [ ] Health Check（深度健康检查 + 依赖检测）
+- [ ] Graceful Shutdown（优雅停机）
+- [ ] Blue/Green Deployment Config
+- [ ] Canary Deployment Config
+- [ ] Rollback Strategy
+- [ ] SLO/SLA Definition（可用性/延迟/错误率目标）
+- [ ] Capacity Planning Model
+- [ ] Cost Guardrail（LLM成本控制 + 告警）
+- [ ] Backup + Disaster Recovery Plan
+- [ ] Chaos Engineering Toolkit
+
+### Phase 13-D: API Gateway + SDK + MCP Server（⭐⭐⭐⭐⭐）
+- [ ] API Gateway（认证/限流/路由/版本/日志）
+- [ ] OpenAPI 3.1 Spec（全量API文档）
+- [ ] TypeScript SDK（Resume/Interview/PeopleGPT/Operator/Memory/Workflow/Eval）
+- [ ] Python SDK
+- [ ] API Key Management（创建/轮换/撤销/Scope）
+- [ ] Webhook System（事件订阅 + 重试 + 签名验证）
+- [ ] MCP Server（Model Context Protocol标准接口）
+- [ ] Agent-to-Agent Protocol（跨系统Agent通信）
+- [ ] Rate Limiting per API Key
+- [ ] Usage Metering（API调用计量）
+- [ ] Developer Portal（文档 + Playground + 示例）
+
+### Phase 13-E: Private Deployment（⭐⭐⭐⭐⭐⭐）
+- [ ] Docker Compose（一键启动全栈）
+- [ ] Kubernetes Manifests（Deployment/Service/ConfigMap/Secret/HPA）
+- [ ] Helm Chart（参数化部署）
+- [ ] Air-gap Support（离线部署 + 离线模型）
+- [ ] 国产大模型适配（DeepSeek/Qwen/GLM/Baichuan）
+- [ ] 国产数据库适配（达梦/人大金仓/OceanBase）
+- [ ] 国产中间件适配（TongRDS/东方通）
+- [ ] Multi-region HA（多地域高可用）
+- [ ] Configuration Management（环境配置管理）
+- [ ] Migration Toolkit（SaaS→私有化迁移工具）
+- [ ] Monitoring Stack（Prometheus + Grafana + AlertManager）
+- [ ] Log Aggregation（ELK/Loki）
+
+### 验证与交付
+- [ ] TypeScript 0 errors
+- [ ] Vite Build 通过
+- [ ] GitHub Push
+- [ ] CHANGELOG_PHASE13.md
