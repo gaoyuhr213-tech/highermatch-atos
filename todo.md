@@ -496,3 +496,32 @@
 - [x] 弹窗/Modal移动端全屏适配（DecisionLineage max-h-[90vh] + p-6响应式边距）
 - [x] 触摸交互优化（汉堡菜单p-2=40px点击区域 + 路由切换自动关闭Drawer）
 - [x] 平板端侧边栏自动折叠为图标模式(68px) + 桌面端自动展开(260px)
+
+---
+
+## AI Interview Agent System Prompt 集成（3模块 · 4步交付）
+
+### Step C：文档归档
+- [x] 创建 docs/prompts/interview-agent-system.md 规范化归档
+- [x] 补充加载顺序、触发机制、UI映射关系、合规审计说明
+- [x] Git commit 留痕 (0f0a1ee)
+
+### Step A：后端集成
+- [x] 基座模块(Module 1)常驻初始化加载 → server/ai/interview/prompts/base-system.ts
+- [x] 实时推理模块(Module 2)随面试会话流式启动 → prompts/realtime-loop.ts
+- [x] 报告生成模块(Module 3)面试结束事件触发 → prompts/report-generation.ts
+- [x] 兼容原有 InterviewOrchestrator 业务逻辑做增量补强 → orchestrator.ts v2.0
+
+### Step B：前端UI升级
+- [x] 重写Interview.tsx匹配5 Block同步布局
+- [x] Block 1: Question Panel Sync（题目进度 + 脊柱保护标识）
+- [x] Block 2: Follow-up Queue（分层追问：Clarify/Deep Dive/Stress + 视频锚点 + 触发原因）
+- [x] Block 3: Live Competency Scorecard（5维度 + delta + 双证据hover展示）
+- [x] Block 4: Transcript-Video Anchor Log（visualTag + videoAnchor + STAR标签）
+- [x] Block 5: Timeline Event Marker（摄像头触发 + jumpToVideo + relatedFollowUp）
+- [x] 显性展示摄像头视觉分析证据（Camera Visual Analysis Summary面板）
+- [x] Demo模式升级：完整模拟双流融合 + 摄像头信号 + 分层追问触发
+
+### Step D：培训/测试规划
+- [x] 面试官评审标准培训材料 → docs/prompts/interview-training-and-testing.md
+- [x] 自动化面试场景测试用例生成规范（4类模板 + 回归检查清单 + 实施路线图）
