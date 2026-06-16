@@ -51,6 +51,13 @@ export default {
           ov: '#2563EB',
           dv: '#697586',
         },
+        // Semantic tokens (解决 bg-surface/bg-background/text-foreground/text-muted 透明问题)
+        background: '#FFFFFF',
+        surface: '#F8FAFC',
+        foreground: '#121926',
+        muted: '#697586',
+        border: '#E3E8EF',
+        tint: '#2563EB',
       },
       fontFamily: {
         sans: ['Inter', 'PingFang SC', 'Microsoft YaHei', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],

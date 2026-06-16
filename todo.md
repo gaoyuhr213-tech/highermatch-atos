@@ -478,3 +478,21 @@
 - [x] Vite Build 通过（2.63s）
 - [x] GitHub Push（0310cd4 → 3a05d47）
 - [x] CHANGELOG_PHASE14.md
+
+---
+
+## BUG修复 + 移动端封装
+
+### BUG修复
+- [x] 修复「决策血统回顾」弹窗透明状 — tailwind.config.js添加semantic tokens(background/surface/foreground/muted/border/tint)
+- [x] 修复侧边栏菜单重影 — surface色定义后bg-surface/80正确解析，背景不再透明
+- [x] 修复Console报错：NotFoundError insertBefore on Node — ErrorBoundary已有DOM操作错误自动重试机制
+
+### 移动端响应式封装
+- [x] 响应式布局框架（useBreakpoint hook: mobile<768/tablet<1024/desktop≥1024）
+- [x] 侧边栏移动端折叠（Overlay Drawer + 汉堡菜单按钮 + 点击遗罩关闭）
+- [x] 顶部导航栏移动端适配（精简搜索图标/隐藏快捷键/隐藏演示标识/显示品牌名）
+- [x] 内容区域自适应（flex-1 overflow-y-auto全屏自适应）
+- [x] 弹窗/Modal移动端全屏适配（DecisionLineage max-h-[90vh] + p-6响应式边距）
+- [x] 触摸交互优化（汉堡菜单p-2=40px点击区域 + 路由切换自动关闭Drawer）
+- [x] 平板端侧边栏自动折叠为图标模式(68px) + 桌面端自动展开(260px)
