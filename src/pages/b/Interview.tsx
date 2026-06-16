@@ -645,37 +645,123 @@ export default function Interview() {
           )}
         </section>
 
-        {/* ─── Block 4 continued: (center already used above, this row is for bottom panels) */}
-        {/* Additional Transcript Stats — Center Bottom */}
+        {/* ─── Camera Visual Analysis Dashboard — Center Bottom */}
         <section className="col-span-6 row-span-1 bg-surface border border-border rounded-xl p-2.5 flex flex-col min-h-0">
           <div className="flex items-center gap-2 mb-2">
             <Camera className="w-3.5 h-3.5 text-brand-600" />
-            <span className="text-[11px] font-semibold text-foreground">Camera Visual Analysis Summary</span>
+            <span className="text-[11px] font-semibold text-foreground">Camera Visual Analysis · Live Metrics</span>
+            {session.status === 'in_progress' && <span className="ml-auto flex items-center gap-1 text-[8px] text-ok-600"><div className="w-1.5 h-1.5 rounded-full bg-ok-500 animate-pulse" />Streaming</span>}
           </div>
           <div className="flex-1 overflow-y-auto">
             {events.length === 0 ? (
               <p className="text-[9px] text-muted text-center py-4">Camera visual analysis results appear here during interview...</p>
             ) : (
-              <div className="grid grid-cols-2 gap-2">
-                {/* Confidence signals count */}
-                <div className="p-2 bg-ok-50 rounded-lg border border-ok-100">
-                  <div className="flex items-center gap-1 mb-1"><CheckCircle className="w-3 h-3 text-ok-600" /><span className="text-[9px] font-semibold text-ok-700">Confidence Signals</span></div>
-                  <span className="text-lg font-bold text-ok-700 tabular-nums">{events.filter(e => e.type === 'confidence').length}</span>
+              <div className="space-y-2">
+                {/* ─── Row 1: Quantitative KPI Gauges ─── */}
+                <div className="grid grid-cols-3 gap-2">
+                  {/* Eye Contact / Gaze Ratio */}
+                  {(() => {
+                    const confidenceEvents = events.filter(e => e.type === 'confidence');
+                    const totalEvents = events.length;
+                    const gazeRatio = totalEvents > 0 ? Math.round((confidenceEvents.length / totalEvents) * 100) : 0;
+                    const gazeColor = gazeRatio >= 75 ? 'text-ok-700' : gazeRatio >= 50 ? 'text-warn-700' : 'text-risk-700';
+                    const gazeBg = gazeRatio >= 75 ? 'bg-ok-50 border-ok-100' : gazeRatio >= 50 ? 'bg-warn-50 border-warn-100' : 'bg-risk-50 border-risk-100';
+                    return (
+                      <div className={`p-2 rounded-lg border ${gazeBg}`}>
+                        <div className="flex items-center gap-1 mb-0.5"><Eye className="w-3 h-3 text-brand-500" /><span className="text-[8px] font-medium text-muted">Eye Contact</span></div>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className={`text-xl font-bold tabular-nums ${gazeColor}`}>{gazeRatio}</span>
+                          <span className="text-[9px] text-muted">%</span>
+                        </div>
+                        <div className="h-1 bg-white/60 rounded-full mt-1 overflow-hidden"><div className="h-full bg-current rounded-full transition-all duration-700" style={{ width: `${gazeRatio}%`, color: gazeRatio >= 75 ? '#22C55E' : gazeRatio >= 50 ? '#F59E0B' : '#EF4444' }} /></div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Average Pause Duration */}
+                  {(() => {
+                    const pauseEvents = events.filter(e => e.type === 'long_pause' || e.type === 'stress_risk');
+                    const avgPause = pauseEvents.length > 0
+                      ? (pauseEvents.reduce((sum, e) => sum + ((e.jumpToVideo?.endSec || 0) - (e.jumpToVideo?.startSec || 0)), 0) / pauseEvents.length).toFixed(1)
+                      : '0.0';
+                    const pauseVal = parseFloat(avgPause);
+                    const pauseColor = pauseVal <= 2 ? 'text-ok-700' : pauseVal <= 4 ? 'text-warn-700' : 'text-risk-700';
+                    const pauseBg = pauseVal <= 2 ? 'bg-ok-50 border-ok-100' : pauseVal <= 4 ? 'bg-warn-50 border-warn-100' : 'bg-risk-50 border-risk-100';
+                    return (
+                      <div className={`p-2 rounded-lg border ${pauseBg}`}>
+                        <div className="flex items-center gap-1 mb-0.5"><Clock className="w-3 h-3 text-muted" /><span className="text-[8px] font-medium text-muted">Avg Pause</span></div>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className={`text-xl font-bold tabular-nums ${pauseColor}`}>{avgPause}</span>
+                          <span className="text-[9px] text-muted">sec</span>
+                        </div>
+                        <p className="text-[7px] text-muted mt-0.5">{pauseEvents.length} pause event{pauseEvents.length !== 1 ? 's' : ''} detected</p>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Stress Behavior Count */}
+                  {(() => {
+                    const stressCount = events.filter(e => e.type === 'stress_risk' || e.type === 'evasion').length;
+                    const stressColor = stressCount <= 1 ? 'text-ok-700' : stressCount <= 3 ? 'text-warn-700' : 'text-risk-700';
+                    const stressBg = stressCount <= 1 ? 'bg-ok-50 border-ok-100' : stressCount <= 3 ? 'bg-warn-50 border-warn-100' : 'bg-risk-50 border-risk-100';
+                    return (
+                      <div className={`p-2 rounded-lg border ${stressBg}`}>
+                        <div className="flex items-center gap-1 mb-0.5"><AlertTriangle className="w-3 h-3 text-risk-500" /><span className="text-[8px] font-medium text-muted">Stress Behaviors</span></div>
+                        <div className="flex items-baseline gap-0.5">
+                          <span className={`text-xl font-bold tabular-nums ${stressColor}`}>{stressCount}</span>
+                          <span className="text-[9px] text-muted">events</span>
+                        </div>
+                        <p className="text-[7px] text-muted mt-0.5">{stressCount === 0 ? 'No stress detected' : stressCount <= 2 ? 'Within normal range' : 'Elevated — review recommended'}</p>
+                      </div>
+                    );
+                  })()}
                 </div>
-                {/* Stress signals count */}
-                <div className="p-2 bg-risk-50 rounded-lg border border-risk-100">
-                  <div className="flex items-center gap-1 mb-1"><AlertTriangle className="w-3 h-3 text-risk-600" /><span className="text-[9px] font-semibold text-risk-700">Stress Signals</span></div>
-                  <span className="text-lg font-bold text-risk-700 tabular-nums">{events.filter(e => e.type === 'stress_risk' || e.type === 'evasion').length}</span>
+
+                {/* ─── Row 2: Secondary Metrics + Signal Breakdown ─── */}
+                <div className="grid grid-cols-4 gap-1.5">
+                  {/* Confidence events */}
+                  <div className="p-1.5 bg-ok-50 rounded-lg border border-ok-100 text-center">
+                    <span className="text-[8px] text-ok-600 font-medium block">Confidence</span>
+                    <span className="text-sm font-bold text-ok-700 tabular-nums">{events.filter(e => e.type === 'confidence').length}</span>
+                  </div>
+                  {/* Evasion events */}
+                  <div className="p-1.5 bg-warn-50 rounded-lg border border-warn-100 text-center">
+                    <span className="text-[8px] text-warn-600 font-medium block">Evasion</span>
+                    <span className="text-sm font-bold text-warn-700 tabular-nums">{events.filter(e => e.type === 'evasion').length}</span>
+                  </div>
+                  {/* Camera exceptions */}
+                  <div className="p-1.5 bg-ink-50 rounded-lg border border-border text-center">
+                    <span className="text-[8px] text-muted font-medium block">Cam Error</span>
+                    <span className="text-sm font-bold text-foreground tabular-nums">{events.filter(e => e.type === 'camera_exception').length}</span>
+                  </div>
+                  {/* Total */}
+                  <div className="p-1.5 bg-brand-50 rounded-lg border border-brand-100 text-center">
+                    <span className="text-[8px] text-brand-600 font-medium block">Total</span>
+                    <span className="text-sm font-bold text-brand-700 tabular-nums">{events.length}</span>
+                  </div>
                 </div>
-                {/* Camera exceptions */}
-                <div className="p-2 bg-warn-50 rounded-lg border border-warn-100">
-                  <div className="flex items-center gap-1 mb-1"><AlertCircle className="w-3 h-3 text-warn-600" /><span className="text-[9px] font-semibold text-warn-700">Camera Exceptions</span></div>
-                  <span className="text-lg font-bold text-warn-700 tabular-nums">{events.filter(e => e.type === 'camera_exception').length}</span>
-                </div>
-                {/* Total events */}
-                <div className="p-2 bg-brand-50 rounded-lg border border-brand-100">
-                  <div className="flex items-center gap-1 mb-1"><Eye className="w-3 h-3 text-brand-600" /><span className="text-[9px] font-semibold text-brand-700">Total Visual Events</span></div>
-                  <span className="text-lg font-bold text-brand-700 tabular-nums">{events.length}</span>
+
+                {/* ─── Row 3: Real-time Signal Timeline Sparkline ─── */}
+                <div className="p-2 bg-ink-50 rounded-lg border border-border">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[8px] font-medium text-muted">Signal Timeline (last 10 events)</span>
+                    <span className="text-[7px] text-muted tabular-nums">{session.elapsedSeconds > 0 ? `${(events.length / (session.elapsedSeconds / 60)).toFixed(1)} events/min` : '—'}</span>
+                  </div>
+                  <div className="flex items-end gap-0.5 h-6">
+                    {events.slice(-10).map((e, i) => {
+                      const barColor = e.type === 'confidence' ? 'bg-ok-400' : e.type === 'stress_risk' || e.type === 'evasion' ? 'bg-risk-400' : e.type === 'camera_exception' ? 'bg-warn-400' : 'bg-brand-400';
+                      const barHeight = e.type === 'confidence' ? 'h-3' : e.type === 'stress_risk' ? 'h-5' : e.type === 'evasion' ? 'h-4' : 'h-2';
+                      return <div key={i} className={`flex-1 rounded-sm ${barColor} ${barHeight} transition-all duration-300`} title={`${e.type} @${e.timestampSec || '?'}s`} />;
+                    })}
+                    {events.length < 10 && Array.from({ length: 10 - Math.min(events.length, 10) }).map((_, i) => (
+                      <div key={`empty-${i}`} className="flex-1 h-1 bg-ink-200 rounded-sm" />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="flex items-center gap-0.5 text-[7px] text-muted"><div className="w-2 h-2 rounded-sm bg-ok-400" />Confidence</span>
+                    <span className="flex items-center gap-0.5 text-[7px] text-muted"><div className="w-2 h-2 rounded-sm bg-risk-400" />Stress</span>
+                    <span className="flex items-center gap-0.5 text-[7px] text-muted"><div className="w-2 h-2 rounded-sm bg-warn-400" />Exception</span>
+                  </div>
                 </div>
               </div>
             )}
